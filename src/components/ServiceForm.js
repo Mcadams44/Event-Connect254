@@ -21,8 +21,8 @@ const ServiceForm = ({ onSubmit, initialValues = null }) => {
     try {
       const token = localStorage.getItem('token');
       const url = initialValues 
-        ? `http://localhost:5000/api/services/${initialValues.id}`
-        : 'http://localhost:5000/api/services';
+        ? `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/services/${initialValues.id}`
+        : `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/services`;
       
       const response = await fetch(url, {
         method: initialValues ? 'PATCH' : 'POST',

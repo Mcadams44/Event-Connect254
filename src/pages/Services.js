@@ -13,7 +13,7 @@ const Services = () => {
   const fetchServices = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/services', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/services`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -32,7 +32,7 @@ const Services = () => {
     if (window.confirm('Are you sure you want to delete this service?')) {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:5000/api/services/${serviceId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/services/${serviceId}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`

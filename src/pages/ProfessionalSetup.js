@@ -87,7 +87,7 @@ const ProfessionalSetup = () => {
         return;
       }
       
-      const response = await fetch('http://localhost:5000/api/professional-profile', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/professional-profile`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

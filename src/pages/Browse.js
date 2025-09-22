@@ -14,7 +14,7 @@ const Browse = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/categories');
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/categories`);
       if (response.ok) {
         const data = await response.json();
         setCategories([
@@ -29,7 +29,7 @@ const Browse = () => {
 
   const fetchProfessionals = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/professionals');
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/professionals`);
       if (response.ok) {
         const data = await response.json();
         setProfessionals(data);

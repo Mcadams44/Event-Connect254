@@ -17,27 +17,42 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
-      });
-      
-      const data = await response.json();
-      
-      if (response.ok) {
-        localStorage.setItem('token', data.access_token);
-        signup(data.user);
-        navigate(values.user_type === 'professional' ? '/professional-setup' : '/');
-      } else {
-        setFieldError('email', data.message);
+    const apiUrls = [
+      process.env.REACT_APP_API_URL,
+      process.env.REACT_APP_BACKUP_API_URL,
+      'http://localhost:5000'
+    ].filter(Boolean);
+
+    for (const apiUrl of apiUrls) {
+      try {
+        const response = await fetch(`${apiUrl}/api/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(values),
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem('token', data.access_token);
+          signup(data.user);
+          navigate(values.user_type === 'professional' ? '/professional-setup' : '/');
+          setSubmitting(false);
+          return;
+        } else {
+          const data = await response.json();
+          setFieldError('email', data.message || 'Registration failed');
+          setSubmitting(false);
+          return;
+        }
+      } catch (error) {
+        console.log(`Failed to connect to ${apiUrl}:`, error);
+        continue;
       }
-    } catch (error) {
-      setFieldError('email', 'Network error. Please try again.');
     }
+    
+    setFieldError('email', 'Unable to connect to server. Please try again later.');
     setSubmitting(false);
   };
 

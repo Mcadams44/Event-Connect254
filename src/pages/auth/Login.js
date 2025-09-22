@@ -15,27 +15,42 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
-      });
-      
-      const data = await response.json();
-      
-      if (response.ok) {
-        localStorage.setItem('token', data.access_token);
-        login(data.user);
-        navigate(values.userType === 'professional' ? '/dashboard' : '/');
-      } else {
-        setFieldError('email', data.message);
+    const apiUrls = [
+      process.env.REACT_APP_API_URL,
+      process.env.REACT_APP_BACKUP_API_URL,
+      'http://localhost:5000'
+    ].filter(Boolean);
+
+    for (const apiUrl of apiUrls) {
+      try {
+        const response = await fetch(`${apiUrl}/api/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(values),
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem('token', data.access_token);
+          login(data.user);
+          navigate(values.userType === 'professional' ? '/dashboard' : '/');
+          setSubmitting(false);
+          return;
+        } else {
+          const data = await response.json();
+          setFieldError('email', data.message || 'Login failed');
+          setSubmitting(false);
+          return;
+        }
+      } catch (error) {
+        console.log(`Failed to connect to ${apiUrl}:`, error);
+        continue;
       }
-    } catch (error) {
-      setFieldError('email', 'Network error. Please try again.');
     }
+    
+    setFieldError('email', 'Unable to connect to server. Please try again later.');
     setSubmitting(false);
   };
 

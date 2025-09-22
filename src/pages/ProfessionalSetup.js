@@ -87,34 +87,43 @@ const ProfessionalSetup = () => {
         return;
       }
       
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/professional-profile`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          ...formData,
-          setupComplete: true
-        })
-      });
-      
-      if (response.ok) {
-        updateProfile({
-          ...formData,
-          services: [formData.category],
-          setupComplete: true
-        });
-        navigate('/dashboard');
-      } else {
-        // Fallback to local storage if API fails
-        updateProfile({
-          ...formData,
-          services: [formData.category],
-          setupComplete: true
-        });
-        navigate('/dashboard');
+      const apiUrls = [
+        process.env.REACT_APP_API_URL,
+        process.env.REACT_APP_BACKUP_API_URL,
+        'http://localhost:5000'
+      ].filter(Boolean);
+
+      let success = false;
+      for (const apiUrl of apiUrls) {
+        try {
+          const response = await fetch(`${apiUrl}/api/professional-profile`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              ...formData,
+              setupComplete: true
+            })
+          });
+          
+          if (response.ok) {
+            success = true;
+            break;
+          }
+        } catch (error) {
+          console.log(`Failed to connect to ${apiUrl}:`, error);
+          continue;
+        }
       }
+      
+      updateProfile({
+        ...formData,
+        services: [formData.category],
+        setupComplete: true
+      });
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error saving profile:', error);
       // Fallback to local storage

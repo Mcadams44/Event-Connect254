@@ -13,30 +13,51 @@ const Browse = () => {
   }, []);
 
   const fetchCategories = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/categories`);
-      if (response.ok) {
-        const data = await response.json();
-        setCategories([
-          { id: 'all', name: 'All Categories' },
-          ...data
-        ]);
+    const apiUrls = [
+      process.env.REACT_APP_API_URL,
+      process.env.REACT_APP_BACKUP_API_URL,
+      'http://localhost:5000'
+    ].filter(Boolean);
+
+    for (const apiUrl of apiUrls) {
+      try {
+        const response = await fetch(`${apiUrl}/api/categories`);
+        if (response.ok) {
+          const data = await response.json();
+          setCategories([
+            { id: 'all', name: 'All Categories' },
+            ...data
+          ]);
+          return;
+        }
+      } catch (error) {
+        console.log(`Failed to fetch categories from ${apiUrl}:`, error);
+        continue;
       }
-    } catch (error) {
-      console.error('Error fetching categories:', error);
     }
   };
 
   const fetchProfessionals = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/professionals`);
-      if (response.ok) {
-        const data = await response.json();
-        setProfessionals(data);
+    const apiUrls = [
+      process.env.REACT_APP_API_URL,
+      process.env.REACT_APP_BACKUP_API_URL,
+      'http://localhost:5000'
+    ].filter(Boolean);
+
+    for (const apiUrl of apiUrls) {
+      try {
+        const response = await fetch(`${apiUrl}/api/professionals`);
+        if (response.ok) {
+          const data = await response.json();
+          setProfessionals(data);
+          return;
+        }
+      } catch (error) {
+        console.log(`Failed to fetch from ${apiUrl}:`, error);
+        continue;
       }
-    } catch (error) {
-      console.error('Error fetching professionals:', error);
     }
+    console.error('Failed to fetch professionals from all endpoints');
   };
 
   const filteredProfessionals = professionals.filter(prof => {

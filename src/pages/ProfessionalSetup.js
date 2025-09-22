@@ -75,6 +75,18 @@ const ProfessionalSetup = () => {
     
     try {
       const token = localStorage.getItem('token');
+      
+      // If no token, just update locally
+      if (!token) {
+        updateProfile({
+          ...formData,
+          services: [formData.category],
+          setupComplete: true
+        });
+        navigate('/dashboard');
+        return;
+      }
+      
       const response = await fetch('http://localhost:5000/api/professional-profile', {
         method: 'POST',
         headers: {
@@ -95,10 +107,23 @@ const ProfessionalSetup = () => {
         });
         navigate('/dashboard');
       } else {
-        console.error('Failed to save profile');
+        // Fallback to local storage if API fails
+        updateProfile({
+          ...formData,
+          services: [formData.category],
+          setupComplete: true
+        });
+        navigate('/dashboard');
       }
     } catch (error) {
       console.error('Error saving profile:', error);
+      // Fallback to local storage
+      updateProfile({
+        ...formData,
+        services: [formData.category],
+        setupComplete: true
+      });
+      navigate('/dashboard');
     }
   };
 

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 
 const validationSchema = Yup.object({
   name: Yup.string().required('Name is required'),
@@ -14,6 +15,7 @@ const validationSchema = Yup.object({
 
 const Signup = () => {
   const { signup } = useAuth();
+  const { isDark } = useTheme();
   const navigate = useNavigate();
 
   const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
@@ -57,15 +59,15 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-gray-50'} flex flex-col justify-center py-12 sm:px-6 lg:px-8 transition-colors duration-300`}>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2 className={`mt-6 text-center text-3xl font-extrabold ${isDark ? 'text-white' : 'text-gray-900'}`}>
           Join EventConnect
         </h2>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className={`${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white'} py-8 px-4 shadow sm:rounded-lg sm:px-10 transition-colors duration-300`}>
           <Formik
             initialValues={{ name: '', email: '', password: '', confirmPassword: '', user_type: 'client' }}
             validationSchema={validationSchema}
@@ -141,7 +143,7 @@ const Signup = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                  className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${isDark ? 'bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500' : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'} focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 transition-colors duration-300`}
                 >
                   {isSubmitting ? 'Creating Account...' : 'Create Account'}
                 </button>
@@ -151,9 +153,9 @@ const Signup = () => {
 
           <div className="mt-6">
             <div className="text-center">
-              <span className="text-sm text-gray-600">
+              <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                 Already have an account?{' '}
-                <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
+                <Link to="/login" className={`font-medium ${isDark ? 'text-yellow-400 hover:text-yellow-300' : 'text-blue-600 hover:text-blue-500'} transition-colors duration-300`}>
                   Sign in
                 </Link>
               </span>

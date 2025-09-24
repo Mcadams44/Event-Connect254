@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
 
 const SubscriptionPlans = () => {
+  const { isDark } = useTheme();
   const [isAnnual, setIsAnnual] = useState(false);
 
   const plans = [
@@ -64,19 +66,19 @@ const SubscriptionPlans = () => {
   ];
 
   return (
-    <section className="py-20 section-bg-alt">
+    <section className={`py-20 ${isDark ? 'bg-gray-800' : 'bg-gray-50'} transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className={`text-3xl md:text-4xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>
             Professional Membership Plans
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+          <p className={`text-xl ${isDark ? 'text-gray-300' : 'text-gray-600'} max-w-3xl mx-auto mb-8`}>
             Choose the plan that fits your business needs and start connecting with clients today
           </p>
           
           {/* Billing Toggle */}
           <div className="flex items-center justify-center space-x-4 mb-8">
-            <span className={`text-sm font-medium ${!isAnnual ? 'text-blue-600' : 'text-gray-500'}`}>
+            <span className={`text-sm font-medium ${!isAnnual ? (isDark ? 'text-yellow-400' : 'text-blue-600') : (isDark ? 'text-gray-400' : 'text-gray-500')}`}>
               Monthly
             </span>
             <button
@@ -91,7 +93,7 @@ const SubscriptionPlans = () => {
                 }`}
               />
             </button>
-            <span className={`text-sm font-medium ${isAnnual ? 'text-blue-600' : 'text-gray-500'}`}>
+            <span className={`text-sm font-medium ${isAnnual ? (isDark ? 'text-yellow-400' : 'text-blue-600') : (isDark ? 'text-gray-400' : 'text-gray-500')}`}>
               Annual
               <span className="ml-1 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
                 Save 17%
@@ -106,8 +108,8 @@ const SubscriptionPlans = () => {
               key={plan.name}
               className={`relative rounded-2xl p-8 transition-all duration-300 hover:scale-105 ${
                 plan.popular 
-                  ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-2xl ring-4 ring-blue-200' 
-                  : 'card hover:shadow-2xl'
+                  ? (isDark ? 'bg-gradient-to-br from-yellow-600 to-orange-600 text-black shadow-2xl ring-4 ring-yellow-400' : 'bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-2xl ring-4 ring-blue-200')
+                  : (isDark ? 'bg-gray-700 border border-gray-600 hover:shadow-2xl' : 'bg-white border border-gray-200 hover:shadow-2xl')
               }`}
               style={{ animationDelay: `${index * 100}ms` }}
             >
@@ -121,24 +123,24 @@ const SubscriptionPlans = () => {
               
               <div className="text-center mb-8">
                 <h3 className={`text-2xl font-bold mb-2 ${
-                  plan.popular ? 'text-white' : 'text-gray-900'
+                  plan.popular ? (isDark ? 'text-black' : 'text-white') : (isDark ? 'text-white' : 'text-gray-900')
                 }`}>
                   {plan.name}
                 </h3>
                 <p className={`text-sm mb-6 ${
-                  plan.popular ? 'text-blue-100' : 'text-gray-600'
+                  plan.popular ? (isDark ? 'text-gray-800' : 'text-blue-100') : (isDark ? 'text-gray-300' : 'text-gray-600')
                 }`}>
                   {plan.description}
                 </p>
                 
                 <div className="mb-6">
                   <span className={`text-5xl font-bold ${
-                    plan.popular ? 'text-white' : 'text-gray-900'
+                    plan.popular ? (isDark ? 'text-black' : 'text-white') : (isDark ? 'text-white' : 'text-gray-900')
                   }`}>
                     ${isAnnual ? Math.floor(plan.annualPrice / 12) : plan.monthlyPrice}
                   </span>
                   <span className={`text-lg ${
-                    plan.popular ? 'text-blue-100' : 'text-gray-600'
+                    plan.popular ? (isDark ? 'text-gray-800' : 'text-blue-100') : (isDark ? 'text-gray-300' : 'text-gray-600')
                   }`}>
                     /month
                   </span>
@@ -187,10 +189,10 @@ const SubscriptionPlans = () => {
         </div>
         
         <div className="text-center mt-16">
-          <p className="text-gray-600 mb-4">
+          <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} mb-4`}>
             All plans include a 14-day free trial. No credit card required.
           </p>
-          <div className="flex items-center justify-center space-x-8 text-sm text-gray-500">
+          <div className={`flex items-center justify-center space-x-8 text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
             <div className="flex items-center">
               <svg className="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />

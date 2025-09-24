@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
 
 const Browse = () => {
+  const { isDark } = useTheme();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [professionals, setProfessionals] = useState([]);
@@ -70,7 +72,7 @@ const Browse = () => {
   });
 
   return (
-    <div className="min-h-screen section-bg py-8">
+    <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-gray-50'} py-8 transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb Navigation */}
         <nav className="flex mb-6" aria-label="Breadcrumb">
@@ -96,11 +98,11 @@ const Browse = () => {
 
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Browse Professionals</h1>
-          <p className="text-lg text-gray-600 mb-6">Find verified event professionals for your perfect celebration</p>
+          <h1 className={`text-4xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>Browse Professionals</h1>
+          <p className={`text-lg ${isDark ? 'text-gray-300' : 'text-gray-600'} mb-6`}>Find verified event professionals for your perfect celebration</p>
           
           {/* Search and Filter */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className={`${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white'} rounded-xl shadow-lg p-6 transition-colors duration-300`}>
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1 relative">
                 <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -142,7 +144,7 @@ const Browse = () => {
           {filteredProfessionals.map((professional, index) => (
             <div 
               key={professional.id} 
-              className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+              className={`${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white'} rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2`}
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <div className="relative">
@@ -165,14 +167,14 @@ const Browse = () => {
               </div>
               
               <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                <h3 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-2`}>
                   {professional.name || professional.username}
                 </h3>
                 <p className="text-blue-600 font-medium mb-1 capitalize">{professional.category}</p>
-                <p className="text-gray-600 mb-3 text-sm line-clamp-2">{professional.bio || 'Professional event service provider'}</p>
+                <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} mb-3 text-sm line-clamp-2`}>{professional.bio || 'Professional event service provider'}</p>
                 
                 <div className="space-y-2 mb-4">
-                  <p className="text-gray-600 flex items-center text-sm">
+                  <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} flex items-center text-sm`}>
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     </svg>
@@ -203,7 +205,7 @@ const Browse = () => {
                 <div className="flex space-x-2">
                   <a 
                     href={`mailto:${professional.email}`}
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-all duration-300 text-center text-sm"
+                    className={`flex-1 ${isDark ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-blue-600 hover:bg-blue-700'} text-white py-2 px-4 rounded-lg font-medium transition-all duration-300 text-center text-sm`}
                   >
                     Email
                   </a>
@@ -224,8 +226,8 @@ const Browse = () => {
             <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No professionals found</h3>
-            <p className="text-gray-500 mb-4">
+            <h3 className={`text-xl font-semibold ${isDark ? 'text-white' : 'text-gray-900'} mb-2`}>No professionals found</h3>
+            <p className={`${isDark ? 'text-gray-400' : 'text-gray-500'} mb-4`}>
               {professionals.length === 0 
                 ? 'No professionals have registered yet. Be the first to join!' 
                 : 'Try adjusting your search criteria or browse all categories.'}

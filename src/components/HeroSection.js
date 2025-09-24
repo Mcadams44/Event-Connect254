@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
 
 const HeroSection = () => {
+  const { isDark } = useTheme();
   const [currentBg, setCurrentBg] = useState(0);
   
   const backgroundImages = [
@@ -58,13 +60,13 @@ const HeroSection = () => {
           <div className="space-y-6">
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
               Connect with Top Event
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-pink-400">
+              <span className={`block text-transparent bg-clip-text bg-gradient-to-r ${isDark ? 'from-yellow-300 to-orange-300' : 'from-yellow-400 to-pink-400'}`}>
                 Professionals
               </span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-200 max-w-4xl mx-auto leading-relaxed">
               Your dream event starts here. EventConnect is Kenya's premier marketplace connecting you with 
-              <span className="text-yellow-400 font-semibold"> verified professionals</span> who bring your vision to life.
+              <span className={`${isDark ? 'text-yellow-300' : 'text-yellow-400'} font-semibold`}> verified professionals</span> who bring your vision to life.
             </p>
           </div>
 
@@ -103,10 +105,10 @@ const HeroSection = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-            <Link to="/browse" className="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-bold text-lg px-10 py-4 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300">
+            <Link to="/browse" className={`bg-gradient-to-r ${isDark ? 'from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700' : 'from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800'} text-white font-bold text-lg px-10 py-4 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300`}>
               🔍 Find Professionals
             </Link>
-            <Link to="/signup" className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold text-lg px-10 py-4 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300">
+            <Link to="/signup" className={`bg-gradient-to-r ${isDark ? 'from-yellow-600/80 to-orange-600/80 hover:from-yellow-500/90 hover:to-orange-500/90' : 'from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600'} text-white font-bold text-lg px-10 py-4 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300`}>
               ✨ Post Your Event
             </Link>
           </div>

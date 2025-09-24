@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTheme } from '../context/ThemeContext';
 
 const FeaturedProfessionals = () => {
   const professionals = [
@@ -43,11 +44,12 @@ const FeaturedProfessionals = () => {
         <svg className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
           <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
         </svg>
-        <span className="text-sm font-medium text-gray-700">{rating}</span>
+        <span className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{rating}</span>
       </div>
     );
   };
 
+  const { isDark } = useTheme();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
@@ -58,13 +60,13 @@ const FeaturedProfessionals = () => {
   }, [professionals.length]);
 
   return (
-    <section className="py-20 bg-gradient-to-br from-blue-50 to-indigo-100">
+    <section className={`py-20 ${isDark ? 'bg-gradient-to-br from-gray-800 to-gray-900' : 'bg-gradient-to-br from-blue-50 to-indigo-100'} transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className={`text-3xl md:text-4xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>
             Featured Professionals
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className={`text-xl ${isDark ? 'text-gray-300' : 'text-gray-600'} max-w-3xl mx-auto`}>
             Meet our top-rated professionals who consistently deliver exceptional results
           </p>
         </div>
@@ -76,7 +78,7 @@ const FeaturedProfessionals = () => {
           >
             {professionals.map((professional) => (
               <div key={professional.id} className="w-full flex-shrink-0">
-                <div className="bg-white rounded-2xl shadow-xl p-8 mx-4">
+                <div className={`${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white'} rounded-2xl shadow-xl p-8 mx-4 transition-colors duration-300`}>
                   <div className="flex flex-col md:flex-row items-center gap-8">
                     {/* Profile Image */}
                     <div className="relative">
@@ -92,18 +94,18 @@ const FeaturedProfessionals = () => {
 
                     {/* Professional Info */}
                     <div className="flex-1 text-center md:text-left">
-                      <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                      <h3 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-2`}>
                         {professional.name}
                       </h3>
                       <p className="text-blue-600 font-semibold text-lg mb-3">
                         {professional.role}
                       </p>
-                      <p className="text-gray-600 mb-4">
+                      <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} mb-4`}>
                         {professional.description}
                       </p>
                       
                       <div className="flex flex-col sm:flex-row gap-4 items-center justify-center md:justify-start mb-4">
-                        <span className="flex items-center text-gray-500">
+                        <span className={`flex items-center ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -119,14 +121,14 @@ const FeaturedProfessionals = () => {
                         {professional.tags.map((tag, index) => (
                           <span
                             key={index}
-                            className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium"
+                            className={`${isDark ? 'bg-yellow-500/20 text-yellow-400' : 'bg-blue-100 text-blue-700'} px-3 py-1 rounded-full text-sm font-medium`}
                           >
                             {tag}
                           </span>
                         ))}
                       </div>
 
-                      <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors">
+                      <button className={`${isDark ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-blue-600 hover:bg-blue-700'} text-white font-medium py-3 px-6 rounded-lg transition-colors`}>
                         View Profile & Portfolio
                       </button>
                     </div>
@@ -143,7 +145,7 @@ const FeaturedProfessionals = () => {
                 key={index}
                 onClick={() => setCurrentSlide(index)}
                 className={`w-3 h-3 rounded-full transition-colors ${
-                  currentSlide === index ? 'bg-blue-600' : 'bg-gray-300'
+                  currentSlide === index ? (isDark ? 'bg-yellow-500' : 'bg-blue-600') : (isDark ? 'bg-gray-600' : 'bg-gray-300')
                 }`}
               />
             ))}

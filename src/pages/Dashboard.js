@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
+  const { isDark } = useTheme();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -17,7 +19,7 @@ const Dashboard = () => {
   }, [user, navigate]);
 
   return (
-    <div className="min-h-screen section-bg">
+    <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-gray-50'} transition-colors duration-300`}>
       {/* Breadcrumb */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         <nav className="flex mb-6" aria-label="Breadcrumb">
@@ -43,10 +45,10 @@ const Dashboard = () => {
       </div>
       <div className="max-w-7xl mx-auto pb-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
-          <div className="bg-white overflow-hidden shadow rounded-lg">
+          <div className={`${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white'} overflow-hidden shadow rounded-lg transition-colors duration-300`}>
             <div className="px-4 py-5 sm:p-6">
               <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   Welcome, {user?.name}!
                 </h1>
                 <button
@@ -88,7 +90,7 @@ const Dashboard = () => {
                   {/* Professional Stats */}
                   <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg p-6">
                     <div className="flex justify-between items-center mb-4">
-                      <h2 className="text-xl font-semibold">Professional Dashboard</h2>
+                      <h2 className={`text-xl font-semibold ${isDark ? 'text-white' : 'text-white'}`}>Professional Dashboard</h2>
                       {user?.subscription ? (
                         <div className="bg-green-500 px-3 py-1 rounded-full text-sm font-semibold">
                           {user.subscription.plan} Plan
@@ -213,8 +215,8 @@ const Dashboard = () => {
                   </div>
 
                   {/* Quick Actions */}
-                  <div className="bg-white border rounded-lg p-6">
-                    <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
+                  <div className={`${isDark ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'} border rounded-lg p-6 transition-colors duration-300`}>
+                    <h3 className={`text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Quick Actions</h3>
                     <div className="flex flex-wrap gap-3">
                       <Link to="/profile" className="bg-blue-50 text-blue-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors">
                         Complete Profile
@@ -234,8 +236,8 @@ const Dashboard = () => {
               )}
 
               {user?.userType === 'client' && (
-                <div className="bg-white border rounded-lg p-6">
-                  <h2 className="text-xl font-semibold mb-4">Client Dashboard</h2>
+                <div className={`${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border rounded-lg p-6 transition-colors duration-300`}>
+                  <h2 className={`text-xl font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Client Dashboard</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="border rounded p-4">
                       <h3 className="font-semibold mb-2">Find Professionals</h3>

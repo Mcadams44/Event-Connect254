@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
 
 const RecentEventRequests = () => {
+  const { isDark } = useTheme();
   const requests = [
     {
       id: 1,
@@ -50,13 +52,13 @@ const RecentEventRequests = () => {
   ];
 
   return (
-    <section className="py-20 section-bg">
+    <section className={`py-20 ${isDark ? 'bg-gray-900' : 'bg-gray-50'} transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className={`text-3xl md:text-4xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>
             Recent Event Requests
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className={`text-xl ${isDark ? 'text-gray-300' : 'text-gray-600'} max-w-3xl mx-auto`}>
             Real opportunities from clients looking for event professionals
           </p>
         </div>
@@ -65,51 +67,51 @@ const RecentEventRequests = () => {
           {requests.map((request, index) => (
             <div 
               key={request.id} 
-              className="card p-6 hover:shadow-2xl transition-all duration-300 group"
+              className={`${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'} rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 group`}
               style={{ animationDelay: `${index * 150}ms` }}
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-3">
                   <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                    request.category === 'Wedding' ? 'bg-pink-100 text-pink-700' :
-                    request.category === 'Corporate' ? 'bg-blue-100 text-blue-700' :
-                    'bg-purple-100 text-purple-700'
+                    request.category === 'Wedding' ? (isDark ? 'bg-pink-900/50 text-pink-300' : 'bg-pink-100 text-pink-700') :
+                    request.category === 'Corporate' ? (isDark ? 'bg-blue-900/50 text-blue-300' : 'bg-blue-100 text-blue-700') :
+                    (isDark ? 'bg-purple-900/50 text-purple-300' : 'bg-purple-100 text-purple-700')
                   }`}>
                     {request.category}
                   </span>
                   {request.urgent && (
-                    <span className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold animate-pulse">
+                    <span className={`px-2 py-1 ${isDark ? 'bg-red-900/50 text-red-300' : 'bg-red-100 text-red-700'} rounded-full text-xs font-semibold animate-pulse`}>
                       Urgent
                     </span>
                   )}
                 </div>
                 <div className="text-right">
-                  <div className="text-sm text-gray-500">{request.responses} responses</div>
+                  <div className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{request.responses} responses</div>
                 </div>
               </div>
               
-              <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
+              <h3 className={`text-xl font-bold ${isDark ? 'text-white group-hover:text-yellow-400' : 'text-gray-900 group-hover:text-blue-600'} mb-3 transition-colors`}>
                 {request.title}
               </h3>
               
-              <p className="text-gray-600 mb-4 leading-relaxed">
+              <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} mb-4 leading-relaxed`}>
                 {request.description}
               </p>
               
               <div className="space-y-2 mb-4">
-                <div className="flex items-center text-sm text-gray-600">
+                <div className={`flex items-center text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                   <svg className="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                   </svg>
                   Budget: <span className="font-semibold text-green-600">{request.budget}</span>
                 </div>
-                <div className="flex items-center text-sm text-gray-600">
+                <div className={`flex items-center text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                   <svg className="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   </svg>
                   {request.location}
                 </div>
-                <div className="flex items-center text-sm text-gray-600">
+                <div className={`flex items-center text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                   <svg className="w-4 h-4 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h3a1 1 0 011 1v9a2 2 0 01-2 2H5a2 2 0 01-2-2V8a1 1 0 011-1h3z" />
                   </svg>
@@ -119,7 +121,7 @@ const RecentEventRequests = () => {
               
               <Link 
                 to="/signup" 
-                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 text-center block group-hover:shadow-lg"
+                className={`w-full bg-gradient-to-r ${isDark ? 'from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700' : 'from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700'} text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 text-center block group-hover:shadow-lg`}
               >
                 Respond to Request
               </Link>

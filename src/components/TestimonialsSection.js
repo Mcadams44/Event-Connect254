@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTheme } from '../context/ThemeContext';
 
 const TestimonialsSection = () => {
+  const { isDark } = useTheme();
   const testimonials = [
     {
       id: 1,
@@ -41,20 +43,20 @@ const TestimonialsSection = () => {
   };
 
   return (
-    <section className="py-20 section-bg">
+    <section className={`py-20 ${isDark ? 'bg-gray-900' : 'bg-gray-50'} transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className={`text-3xl md:text-4xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>
             What Our Clients Say
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className={`text-xl ${isDark ? 'text-gray-300' : 'text-gray-600'} max-w-3xl mx-auto`}>
             Real stories from satisfied clients who found their perfect event professionals
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {testimonials.map((testimonial) => (
-            <div key={testimonial.id} className="card p-8 text-center">
+            <div key={testimonial.id} className={`${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'} rounded-xl shadow-lg p-8 text-center transition-colors duration-300`}>
               {/* Quote Icon */}
               <div className="mb-6">
                 <svg className="w-10 h-10 text-blue-200 mx-auto" fill="currentColor" viewBox="0 0 24 24">
@@ -66,7 +68,7 @@ const TestimonialsSection = () => {
               <StarRating rating={testimonial.rating} />
 
               {/* Testimonial Text */}
-              <p className="text-gray-600 mb-6 italic leading-relaxed">
+              <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} mb-6 italic leading-relaxed`}>
                 "{testimonial.testimonial}"
               </p>
 
@@ -78,8 +80,8 @@ const TestimonialsSection = () => {
                   className="w-12 h-12 rounded-full object-cover"
                 />
                 <div className="text-left">
-                  <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
-                  <p className="text-sm text-gray-500">{testimonial.role}</p>
+                  <h4 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>{testimonial.name}</h4>
+                  <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{testimonial.role}</p>
                 </div>
               </div>
             </div>
@@ -90,20 +92,20 @@ const TestimonialsSection = () => {
         <div className="mt-16 text-center">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div>
-              <div className="text-3xl font-bold text-blue-600 mb-2">5,000+</div>
-              <div className="text-gray-600">Events Completed</div>
+              <div className={`text-3xl font-bold ${isDark ? 'text-yellow-400' : 'text-blue-600'} mb-2`}>5,000+</div>
+              <div className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Events Completed</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-blue-600 mb-2">1,200+</div>
-              <div className="text-gray-600">Verified Professionals</div>
+              <div className={`text-3xl font-bold ${isDark ? 'text-yellow-400' : 'text-blue-600'} mb-2`}>1,200+</div>
+              <div className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Verified Professionals</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-blue-600 mb-2">4.9/5</div>
-              <div className="text-gray-600">Average Rating</div>
+              <div className={`text-3xl font-bold ${isDark ? 'text-yellow-400' : 'text-blue-600'} mb-2`}>4.9/5</div>
+              <div className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Average Rating</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-blue-600 mb-2">98%</div>
-              <div className="text-gray-600">Client Satisfaction</div>
+              <div className={`text-3xl font-bold ${isDark ? 'text-yellow-400' : 'text-blue-600'} mb-2`}>98%</div>
+              <div className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Client Satisfaction</div>
             </div>
           </div>
         </div>

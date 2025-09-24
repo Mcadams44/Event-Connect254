@@ -1,14 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
 
 const Footer = () => {
+  const { isDark } = useTheme();
+  
   return (
-    <footer className="bg-gray-900 text-white">
+    <footer className={`${isDark ? 'bg-black border-t border-gray-800' : 'bg-gray-900'} text-white transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold text-blue-400">EventConnect</h3>
+            <h3 className={`text-2xl font-bold ${isDark ? 'text-yellow-400' : 'text-blue-400'}`}>EventConnect</h3>
             <p className="text-gray-300">
               Connecting clients with top event professionals for unforgettable experiences.
             </p>
@@ -33,7 +36,7 @@ const Footer = () => {
 
           {/* Services */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Services</h4>
+            <h4 className={`text-lg font-semibold mb-4 ${isDark ? 'text-yellow-400' : 'text-white'}`}>Services</h4>
             <ul className="space-y-2">
               <li><Link to="/browse" className="text-gray-300 hover:text-white transition-colors">Event Photography</Link></li>
               <li><Link to="/browse" className="text-gray-300 hover:text-white transition-colors">Event Planning</Link></li>
@@ -45,7 +48,7 @@ const Footer = () => {
 
           {/* Company */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Company</h4>
+            <h4 className={`text-lg font-semibold mb-4 ${isDark ? 'text-yellow-400' : 'text-white'}`}>Company</h4>
             <ul className="space-y-2">
               <li><Link to="/" className="text-gray-300 hover:text-white transition-colors">About Us</Link></li>
               <li><a href="#how-it-works" className="text-gray-300 hover:text-white transition-colors">How it Works</a></li>
@@ -57,7 +60,7 @@ const Footer = () => {
 
           {/* Support */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Support</h4>
+            <h4 className={`text-lg font-semibold mb-4 ${isDark ? 'text-yellow-400' : 'text-white'}`}>Support</h4>
             <ul className="space-y-2">
               <li><Link to="/contact" className="text-gray-300 hover:text-white transition-colors">Help Center</Link></li>
               <li><Link to="/contact" className="text-gray-300 hover:text-white transition-colors">Contact Us</Link></li>

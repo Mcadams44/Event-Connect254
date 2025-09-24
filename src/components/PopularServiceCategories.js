@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
 
 const PopularServiceCategories = () => {
+  const { isDark } = useTheme();
   const categories = [
     {
       id: 1,
@@ -54,13 +56,13 @@ const PopularServiceCategories = () => {
   ];
 
   return (
-    <section className="py-20 section-bg">
+    <section className={`py-20 ${isDark ? 'bg-gray-800' : 'bg-gray-50'} transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className={`text-3xl md:text-4xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>
             Popular Service Categories
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className={`text-lg ${isDark ? 'text-gray-300' : 'text-gray-600'} max-w-2xl mx-auto`}>
             Discover top-rated professionals across our most requested event services
           </p>
         </div>
@@ -70,22 +72,22 @@ const PopularServiceCategories = () => {
             <Link 
               key={category.id} 
               to="/browse"
-              className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${category.gradient} p-8 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-105`}
+              className={`group relative overflow-hidden rounded-2xl ${isDark ? 'bg-gradient-to-br from-gray-700 to-gray-600 border border-gray-600' : `bg-gradient-to-br ${category.gradient}`} p-8 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-105`}
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <div className="relative z-10">
                 <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
                   {category.icon}
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-700 transition-colors">
+                <h3 className={`text-xl font-bold ${isDark ? 'text-white group-hover:text-yellow-400' : 'text-gray-900 group-hover:text-blue-700'} mb-2 transition-colors`}>
                   {category.title}
                 </h3>
-                <p className="text-sm text-gray-600 mb-3">{category.description}</p>
+                <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'} mb-3`}>{category.description}</p>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-blue-600">
+                  <span className={`text-sm font-semibold ${isDark ? 'text-yellow-400' : 'text-blue-600'}`}>
                     {category.professionals}+ pros
                   </span>
-                  <svg className="w-5 h-5 text-blue-600 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className={`w-5 h-5 ${isDark ? 'text-yellow-400' : 'text-blue-600'} group-hover:translate-x-1 transition-transform`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const FeaturedProfessionals = () => {
   const professionals = [
@@ -48,8 +48,17 @@ const FeaturedProfessionals = () => {
     );
   };
 
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % professionals.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [professionals.length]);
+
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -60,76 +69,85 @@ const FeaturedProfessionals = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {professionals.map((professional) => (
-            <div key={professional.id} className="card p-6 group">
-              {/* Profile Image */}
-              <div className="relative mb-6">
-                <img
-                  src={professional.image}
-                  alt={professional.name}
-                  className="w-20 h-20 rounded-full object-cover mx-auto border-4 border-white shadow-lg"
-                />
-                <div className="absolute -top-2 -right-2 bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium">
-                  ⭐ {professional.rating}
+        <div className="relative overflow-hidden rounded-2xl">
+          <div 
+            className="flex transition-transform duration-700 ease-in-out"
+            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+          >
+            {professionals.map((professional) => (
+              <div key={professional.id} className="w-full flex-shrink-0">
+                <div className="bg-white rounded-2xl shadow-xl p-8 mx-4">
+                  <div className="flex flex-col md:flex-row items-center gap-8">
+                    {/* Profile Image */}
+                    <div className="relative">
+                      <img
+                        src={professional.image}
+                        alt={professional.name}
+                        className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
+                      />
+                      <div className="absolute -top-2 -right-2 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                        ⭐ {professional.rating}
+                      </div>
+                    </div>
+
+                    {/* Professional Info */}
+                    <div className="flex-1 text-center md:text-left">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                        {professional.name}
+                      </h3>
+                      <p className="text-blue-600 font-semibold text-lg mb-3">
+                        {professional.role}
+                      </p>
+                      <p className="text-gray-600 mb-4">
+                        {professional.description}
+                      </p>
+                      
+                      <div className="flex flex-col sm:flex-row gap-4 items-center justify-center md:justify-start mb-4">
+                        <span className="flex items-center text-gray-500">
+                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                          {professional.location}
+                        </span>
+                        <span className="font-bold text-blue-600 text-lg">
+                          From {professional.startingPrice}
+                        </span>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2 justify-center md:justify-start mb-6">
+                        {professional.tags.map((tag, index) => (
+                          <span
+                            key={index}
+                            className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+
+                      <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors">
+                        View Profile & Portfolio
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
 
-              {/* Professional Info */}
-              <div className="text-center mb-4">
-                <h3 className="text-xl font-semibold text-gray-900 mb-1">
-                  {professional.name}
-                </h3>
-                <p className="text-blue-600 font-medium mb-2">
-                  {professional.role}
-                </p>
-                <StarRating rating={professional.rating} />
-              </div>
-
-              {/* Description */}
-              <p className="text-gray-600 text-sm mb-4 text-center">
-                {professional.description}
-              </p>
-
-              {/* Location and Price */}
-              <div className="flex justify-between items-center text-sm text-gray-500 mb-4">
-                <span className="flex items-center">
-                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  {professional.location}
-                </span>
-                <span className="font-semibold text-blue-600">
-                  From {professional.startingPrice}
-                </span>
-              </div>
-
-              {/* Tags */}
-              <div className="flex flex-wrap gap-2 mb-6">
-                {professional.tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              {/* CTA Button */}
-              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors group-hover:shadow-lg">
-                View Profile & Portfolio
-              </button>
-            </div>
-          ))}
-        </div>
-
-        {/* View All Button */}
-        <div className="text-center mt-12">
-          <button className="btn-secondary text-lg px-8 py-3">
-            View All Professionals
-          </button>
+          {/* Navigation Dots */}
+          <div className="flex justify-center mt-8 space-x-2">
+            {professionals.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`w-3 h-3 rounded-full transition-colors ${
+                  currentSlide === index ? 'bg-blue-600' : 'bg-gray-300'
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

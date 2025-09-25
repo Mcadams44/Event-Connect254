@@ -6,4 +6,4 @@
 - [x] Update get_professionals API to return profile_image for each professional
 - [x] Add profile photo upload field to ProfessionalSetup.js form
 - [x] Update Browse.js to fetch professionals from API instead of using hardcoded data
-- [ ] Test the photo upload and display functionality
+- [x] Test the photo upload and display functionality

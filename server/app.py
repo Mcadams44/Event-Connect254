@@ -5,19 +5,17 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
-<<<<<<< HEAD
-import uuid
-=======
->>>>>>> nathan-functionalities
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
 UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///eventconnect.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = 'your-secret-key-change-in-production'
@@ -235,13 +233,8 @@ def get_professionals():
                     'rating': 4.5,
                     'reviews': 25,
                     'verified': True,
-<<<<<<< HEAD
-                    'portfolio': [],
-                    'image': profile.profile_image or 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face'
-=======
                     'portfolio': portfolio_items,
-                    'image': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face'
->>>>>>> nathan-functionalities
+                    'image': profile.profile_image or 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face'
                 })
     # Add sample professionals for all categories
     if len([r for r in result if r.get('verified')]) < 5:
@@ -288,65 +281,7 @@ def professional_profile():
         user_id = data.get('user_id', 1)  # Default to user 1 for testing
 
     profile = ProfessionalProfile.query.filter_by(user_id=user_id).first()
-    
-    if request.method == 'PUT' and profile:
-        # Delete old portfolios on update
-        Portfolio.query.filter_by(professional_profile_id=profile.id).delete()
-    
-    # Handle text fields - prefer form data for multipart, fallback to json
-    if request.form:
-        category = request.form.get('category', '')
-        specialty = request.form.get('specialty')
-        location = request.form.get('location', '')
-        phone = request.form.get('phone')
-        bio = request.form.get('bio', '')
-        pricing = request.form.get('pricing')
-        setup_complete = request.form.get('setupComplete', 'false').lower() == 'true'
->>>>>>> nathan-functionalities
-    else:
-        json_data = request.get_json() or {}
-        category = json_data.get('category', '')
-        specialty = json_data.get('specialty')
-        location = json_data.get('location', '')
-        phone = json_data.get('phone')
-        bio = json_data.get('bio', '')
-        pricing = json_data.get('pricing')
-        setup_complete = json_data.get('setupComplete', False)
-    
-    if not profile:
-        # Create new profile
-        profile = ProfessionalProfile(
-            user_id=user_id,
-<<<<<<< HEAD
-            category=data['category'],
-            specialty=data.get('specialty'),
-            location=data['location'],
-            phone=data.get('phone'),
-            bio=data['bio'],
-            pricing=data.get('pricing'),
-            profile_image=data.get('profileImage'),
-            setup_complete=data.get('setupComplete', False)
-=======
-            category=category,
-            specialty=specialty,
-            location=location,
-            phone=phone,
-            bio=bio,
-            pricing=pricing,
-            setup_complete=setup_complete
->>>>>>> nathan-functionalities
-        )
-        db.session.add(profile)
-    else:
-        # Update existing profile
-        profile.category = category or profile.category
-        profile.specialty = specialty or profile.specialty
-        profile.location = location or profile.location
-        profile.phone = phone or profile.phone
-        profile.bio = bio or profile.bio
-        profile.pricing = pricing or profile.pricing
-        profile.setup_complete = setup_complete
-=======
+
     if request.method == 'PUT' and profile:
         # Delete old portfolios on update
         Portfolio.query.filter_by(professional_profile_id=profile.id).delete()
@@ -392,65 +327,7 @@ def professional_profile():
         profile.bio = bio or profile.bio
         profile.pricing = pricing or profile.pricing
         profile.setup_complete = setup_complete
-=======
-    if request.method == 'PUT' and profile:
-        # Delete old portfolios on update
-        Portfolio.query.filter_by(professional_profile_id=profile.id).delete()
-    
-    # Handle text fields - prefer form data for multipart, fallback to json
-    if request.form:
-        category = request.form.get('category', '')
-        specialty = request.form.get('specialty')
-        location = request.form.get('location', '')
-        phone = request.form.get('phone')
-        bio = request.form.get('bio', '')
-        pricing = request.form.get('pricing')
-        setup_complete = request.form.get('setupComplete', 'false').lower() == 'true'
->>>>>>> nathan-functionalities
-    else:
-        json_data = request.get_json() or {}
-        category = json_data.get('category', '')
-        specialty = json_data.get('specialty')
-        location = json_data.get('location', '')
-        phone = json_data.get('phone')
-        bio = json_data.get('bio', '')
-        pricing = json_data.get('pricing')
-        setup_complete = json_data.get('setupComplete', False)
-    
-    if not profile:
-        # Create new profile
-        profile = ProfessionalProfile(
-            user_id=user_id,
-<<<<<<< HEAD
-            category=data['category'],
-            specialty=data.get('specialty'),
-            location=data['location'],
-            phone=data.get('phone'),
-            bio=data['bio'],
-            pricing=data.get('pricing'),
-            profile_image=data.get('profileImage'),
-            setup_complete=data.get('setupComplete', False)
-=======
-            category=category,
-            specialty=specialty,
-            location=location,
-            phone=phone,
-            bio=bio,
-            pricing=pricing,
-            setup_complete=setup_complete
->>>>>>> nathan-functionalities
-        )
-        db.session.add(profile)
-    else:
-        # Update existing profile
-        profile.category = category or profile.category
-        profile.specialty = specialty or profile.specialty
-        profile.location = location or profile.location
-        profile.phone = phone or profile.phone
-        profile.bio = bio or profile.bio
-        profile.pricing = pricing or profile.pricing
-        profile.setup_complete = setup_complete
-    
+
     db.session.commit()
     
     # Handle portfolio uploads (only if files present)
@@ -506,6 +383,7 @@ def bookings():
         return jsonify({'message': 'Booking created', 'id': booking.id}), 201
 
 if __name__ == '__main__':
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     with app.app_context():
         db.create_all()
     app.run(debug=True)

@@ -113,11 +113,8 @@ const ProfessionalSetup = () => {
       for (const apiUrl of apiUrls) {
         try {
           const formDataToSend = new FormData();
-<<<<<<< HEAD
 
           // Append text fields
-=======
->>>>>>> 611ce28 (add changes)
           formDataToSend.append('category', formData.category);
           formDataToSend.append('specialty', formData.specialty);
           formDataToSend.append('location', formData.location);
@@ -125,16 +122,12 @@ const ProfessionalSetup = () => {
           formDataToSend.append('bio', formData.bio);
           formDataToSend.append('pricing', formData.pricing);
           formDataToSend.append('setupComplete', 'true');
-<<<<<<< HEAD
 
           // Append profile photo if exists
-=======
->>>>>>> 611ce28 (add changes)
           if (formData.profilePhoto) {
             formDataToSend.append('profilePhoto', formData.profilePhoto);
           }
 
-<<<<<<< HEAD
           // Append portfolio files and metadata
           formData.portfolio.forEach((item, index) => {
             if (item.image) {
@@ -144,8 +137,6 @@ const ProfessionalSetup = () => {
             }
           });
 
-=======
->>>>>>> 611ce28 (add changes)
           const response = await fetch(`${apiUrl}/api/professional-profile`, {
             method: 'POST',
             headers: {

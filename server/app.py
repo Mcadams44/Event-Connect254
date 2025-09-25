@@ -5,10 +5,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
-<<<<<<< HEAD
-=======
 import uuid
->>>>>>> 611ce28 (add changes)
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
@@ -236,11 +233,7 @@ def get_professionals():
                     'rating': 4.5,
                     'reviews': 25,
                     'verified': True,
-<<<<<<< HEAD
                     'portfolio': portfolio_items,
-=======
-                    'portfolio': [],
->>>>>>> 611ce28 (add changes)
                     'image': profile.profile_image or 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face'
                 })
     # Add sample professionals for all categories
@@ -288,26 +281,11 @@ def professional_profile():
         user_id = data.get('user_id', 1)  # Default to user 1 for testing
 
     profile = ProfessionalProfile.query.filter_by(user_id=user_id).first()
-
-    # Always delete old portfolios on update/create to sync with frontend
-    if profile:
-<<<<<<< HEAD
+    
+    if request.method == 'PUT' and profile:
+        # Delete old portfolios on update
         Portfolio.query.filter_by(professional_profile_id=profile.id).delete()
-=======
-        # Update existing profile
-        profile.category = data.get('category', profile.category)
-        profile.specialty = data.get('specialty', profile.specialty)
-        profile.location = data.get('location', profile.location)
-        profile.phone = data.get('phone', profile.phone)
-        profile.bio = data.get('bio', profile.bio)
-        profile.pricing = data.get('pricing', profile.pricing)
-        profile.profile_image = data.get('profileImage', profile.profile_image)
-        profile.setup_complete = data.get('setupComplete', profile.setup_complete)
->>>>>>> 611ce28 (add changes)
-    else:
-        # For new profile, no old to delete
-        pass
-
+    
     # Handle text fields - prefer form data for multipart, fallback to json
     if request.form:
         category = request.form.get('category', '')
@@ -326,12 +304,11 @@ def professional_profile():
         bio = json_data.get('bio', '')
         pricing = json_data.get('pricing')
         setup_complete = json_data.get('setupComplete', False)
-
+    
     if not profile:
         # Create new profile
         profile = ProfessionalProfile(
             user_id=user_id,
-<<<<<<< HEAD
             category=category,
             specialty=specialty,
             location=location,
@@ -339,16 +316,6 @@ def professional_profile():
             bio=bio,
             pricing=pricing,
             setup_complete=setup_complete
-=======
-            category=data['category'],
-            specialty=data.get('specialty'),
-            location=data['location'],
-            phone=data.get('phone'),
-            bio=data['bio'],
-            pricing=data.get('pricing'),
-            profile_image=data.get('profileImage'),
-            setup_complete=data.get('setupComplete', False)
->>>>>>> 611ce28 (add changes)
         )
         db.session.add(profile)
     else:
@@ -360,9 +327,9 @@ def professional_profile():
         profile.bio = bio or profile.bio
         profile.pricing = pricing or profile.pricing
         profile.setup_complete = setup_complete
-
+    
     db.session.commit()
-
+    
     # Handle profile photo upload
     if 'profilePhoto' in request.files:
         file = request.files['profilePhoto']

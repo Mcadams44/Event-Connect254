@@ -8,6 +8,7 @@ const Browse = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 <<<<<<< HEAD
+<<<<<<< HEAD
   const [savedProfessionals, setSavedProfessionals] = useState([]);
   const [professionals, setProfessionals] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -52,6 +53,10 @@ const Browse = () => {
     fetchProfessionals();
   }, []);
 >>>>>>> 611ce28 (add changes)
+=======
+  const [professionals, setProfessionals] = useState([]);
+  const [loading, setLoading] = useState(true);
+>>>>>>> 96faf41 (add changes)
   const [categories, setCategories] = useState([
     { id: 'all', name: 'All Categories' },
     { id: 'wedding', name: 'Wedding Planning' },
@@ -82,6 +87,33 @@ const Browse = () => {
           process.env.REACT_APP_BACKUP_API_URL,
           'http://localhost:5000'
         ].filter(Boolean);
+<<<<<<< HEAD
+=======
+
+        for (const apiUrl of apiUrls) {
+          try {
+            const response = await fetch(`${apiUrl}/api/professionals`);
+            if (response.ok) {
+              const data = await response.json();
+              setProfessionals(data);
+              break;
+            }
+          } catch (error) {
+            console.log(`Failed to connect to ${apiUrl}:`, error);
+            continue;
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching professionals:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfessionals();
+  }, []);
+
+>>>>>>> 96faf41 (add changes)
 
         for (const apiUrl of apiUrls) {
           try {

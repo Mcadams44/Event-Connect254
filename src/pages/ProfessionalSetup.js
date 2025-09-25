@@ -44,7 +44,7 @@ const ProfessionalSetup = () => {
   };
 
   const addPortfolioItem = () => {
-    if (formData.portfolio.length < 10) {
+    if (formData.portfolio.length < 4) {
       const newItem = {
         id: Date.now(),
         title: '',
@@ -92,27 +92,75 @@ const ProfessionalSetup = () => {
     try {
       const token = localStorage.getItem('token');
 
-      // If no token, just update locally
-      if (!token) {
-        updateProfile({
-          ...formData,
-          services: [formData.category],
-          setupComplete: true
-        });
-        navigate('/dashboard');
-        return;
-      }
 
-      const apiUrls = [
-        process.env.REACT_APP_API_URL,
-        process.env.REACT_APP_BACKUP_API_URL,
-        'http://localhost:5000'
-      ].filter(Boolean);
+              // Append text fields
+>>>>>>> nathan-functionalities
+              formDataToSend.append('category', formData.category);
+              formDataToSend.append('specialty', formData.specialty);
+              formDataToSend.append('location', formData.location);
+              formDataToSend.append('phone', formData.phone);
+              formDataToSend.append('bio', formData.bio);
+              formDataToSend.append('pricing', formData.pricing);
+              formDataToSend.append('setupComplete', 'true');
+<<<<<<< HEAD
+          if (formData.profilePhoto) {
+            formDataToSend.append('profilePhoto', formData.profilePhoto);
+          }
+=======
 
-      let success = false;
-      for (const apiUrl of apiUrls) {
-        try {
-          const formDataToSend = new FormData();
+              // Append portfolio files and metadata
+              formData.portfolio.forEach((item, index) => {
+                if (item.image) {
+                  formDataToSend.append('portfolio_images', item.image);
+                  formDataToSend.append('portfolio_title', item.title);
+                  formDataToSend.append('portfolio_description', item.description);
+                }
+              });
+>>>>>>> nathan-functionalities
+=======
+          // If no token, just update locally
+          if (!token) {
+            updateProfile({
+              ...formData,
+              services: [formData.category],
+              setupComplete: true
+            });
+            navigate('/dashboard');
+            return;
+          }
+
+          const apiUrls = [
+            process.env.REACT_APP_API_URL,
+            process.env.REACT_APP_BACKUP_API_URL,
+            'http://localhost:5000'
+          ].filter(Boolean);
+
+          let success = false;
+          for (const apiUrl of apiUrls) {
+            try {
+              const formDataToSend = new FormData();
+
+              // Append text fields
+              formDataToSend.append('category', formData.category);
+              formDataToSend.append('specialty', formData.specialty);
+              formDataToSend.append('location', formData.location);
+              formDataToSend.append('phone', formData.phone);
+              formDataToSend.append('bio', formData.bio);
+              formDataToSend.append('pricing', formData.pricing);
+              formDataToSend.append('setupComplete', 'true');
+
+              // Append portfolio files and metadata
+              formData.portfolio.forEach((item, index) => {
+                if (item.image) {
+                  formDataToSend.append('portfolio_images', item.image);
+                  formDataToSend.append('portfolio_title', item.title);
+                  formDataToSend.append('portfolio_description', item.description);
+                }
+              });
+=======
+
+          // Append text fields
+>>>>>>> nathan-functionalities
           formDataToSend.append('category', formData.category);
           formDataToSend.append('specialty', formData.specialty);
           formDataToSend.append('location', formData.location);
@@ -120,9 +168,21 @@ const ProfessionalSetup = () => {
           formDataToSend.append('bio', formData.bio);
           formDataToSend.append('pricing', formData.pricing);
           formDataToSend.append('setupComplete', 'true');
+<<<<<<< HEAD
           if (formData.profilePhoto) {
             formDataToSend.append('profilePhoto', formData.profilePhoto);
           }
+=======
+
+          // Append portfolio files and metadata
+          formData.portfolio.forEach((item, index) => {
+            if (item.image) {
+              formDataToSend.append('portfolio_images', item.image);
+              formDataToSend.append('portfolio_title', item.title);
+              formDataToSend.append('portfolio_description', item.description);
+            }
+          });
+>>>>>>> nathan-functionalities
 
           const response = await fetch(`${apiUrl}/api/professional-profile`, {
             method: 'POST',
@@ -270,8 +330,8 @@ const ProfessionalSetup = () => {
 
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold">Portfolio (Max 10 photos)</h3>
-                {formData.portfolio.length < 10 && (
+                <h3 className="text-lg font-semibold">Portfolio (Max 4 photos)</h3>
+                {formData.portfolio.length < 4 && (
                   <button
                     type="button"
                     onClick={addPortfolioItem}

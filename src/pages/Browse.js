@@ -6,169 +6,11 @@ const Browse = () => {
   const { isDark } = useTheme();
   const location = useLocation();
   const [searchTerm, setSearchTerm] = useState('');
-  const [professionals, setProfessionals] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProfessionals = async () => {
-      try {
-        const apiUrls = [
-          process.env.REACT_APP_API_URL,
-          process.env.REACT_APP_BACKUP_API_URL,
-          'http://localhost:5000'
-        ].filter(Boolean);
-
-        for (const apiUrl of apiUrls) {
-          try {
-            const response = await fetch(`${apiUrl}/api/professionals`);
-            if (response.ok) {
-              const data = await response.json();
-              setProfessionals(data);
-              setLoading(false);
-              return;
-            }
-          } catch (error) {
-            console.log(`Failed to connect to ${apiUrl}:`, error);
-            continue;
-          }
-        }
-        // If all APIs fail, set empty array
-        setProfessionals([]);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching professionals:', error);
-        setProfessionals([]);
-        setLoading(false);
-      }
-    };
-
-    fetchProfessionals();
-  }, []);
->>>>>>> 611ce28 (add changes)
-  const [categories, setCategories] = useState([
-    { id: 'all', name: 'All Categories' },
-    { id: 'wedding', name: 'Wedding Planning' },
-    { id: 'corporate', name: 'Corporate Events' },
-    { id: 'party', name: 'Party Planning' },
-    { id: 'photography', name: 'Photographer' },
-    { id: 'catering', name: 'Catering' },
-    { id: 'entertainment', name: 'Entertainment' },
-    { id: 'venue', name: 'Venue Coordinators' },
-    { id: 'decoration', name: 'Event Decoration' },
-    { id: 'security', name: 'Security Services' }
-  ]);
-
-  useEffect(() => {
-    // Set category from URL parameter on initial load
-    const urlParams = new URLSearchParams(location.search);
-    const categoryParam = urlParams.get('category');
-    if (categoryParam) {
-      setSelectedCategory(categoryParam);
-    }
-  }, [location.search]);
-=======
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [savedProfessionals, setSavedProfessionals] = useState([]);
   const [professionals, setProfessionals] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchProfessionals = async () => {
-      try {
-        const apiUrls = [
-          process.env.REACT_APP_API_URL,
-          process.env.REACT_APP_BACKUP_API_URL,
-          'http://localhost:5000'
-        ].filter(Boolean);
-
-        for (const apiUrl of apiUrls) {
-          try {
-            const response = await fetch(`${apiUrl}/api/professionals`);
-            if (response.ok) {
-              const data = await response.json();
-              setProfessionals(data);
-              setLoading(false);
-              return;
-            }
-          } catch (error) {
-            console.log(`Failed to connect to ${apiUrl}:`, error);
-            continue;
-          }
-        }
-        // If all APIs fail, set empty array
-        setProfessionals([]);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching professionals:', error);
-        setProfessionals([]);
-        setLoading(false);
-      }
-    };
-
-    fetchProfessionals();
-  }, []);
-
-  const [categories, setCategories] = useState([
-    { id: 'all', name: 'All Categories' },
-    { id: 'wedding', name: 'Wedding Planning' },
-    { id: 'corporate', name: 'Corporate Events' },
-    { id: 'party', name: 'Party Planning' },
-    { id: 'photography', name: 'Photographer' },
-    { id: 'catering', name: 'Catering' },
-    { id: 'entertainment', name: 'Entertainment' },
-    { id: 'venue', name: 'Venue Coordinators' },
-    { id: 'decoration', name: 'Event Decoration' },
-    { id: 'security', name: 'Security Services' }
-  ]);
-
-  useEffect(() => {
-    // Set category from URL parameter on initial load
-    const urlParams = new URLSearchParams(location.search);
-    const categoryParam = urlParams.get('category');
-    if (categoryParam) {
-      setSelectedCategory(categoryParam);
-    }
-  }, [location.search]);
-=======
-  const [professionals, setProfessionals] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProfessionals = async () => {
-      try {
-        const apiUrls = [
-          process.env.REACT_APP_API_URL,
-          process.env.REACT_APP_BACKUP_API_URL,
-          'http://localhost:5000'
-        ].filter(Boolean);
-
-        for (const apiUrl of apiUrls) {
-          try {
-            const response = await fetch(`${apiUrl}/api/professionals`);
-            if (response.ok) {
-              const data = await response.json();
-              setProfessionals(data);
-              setLoading(false);
-              return;
-            }
-          } catch (error) {
-            console.log(`Failed to connect to ${apiUrl}:`, error);
-            continue;
-          }
-        }
-        // If all APIs fail, set empty array
-        setProfessionals([]);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching professionals:', error);
-        setProfessionals([]);
-        setLoading(false);
-      }
-    };
-
-    fetchProfessionals();
-  }, []);
->>>>>>> 611ce28 (add changes)
   const [categories, setCategories] = useState([
     { id: 'all', name: 'All Categories' },
     { id: 'wedding', name: 'Wedding Planning' },
@@ -191,26 +33,56 @@ const Browse = () => {
     }
   }, [location.search]);
 
+  useEffect(() => {
+    const fetchProfessionals = async () => {
+      try {
+        const apiUrls = [
+          process.env.REACT_APP_API_URL,
+          process.env.REACT_APP_BACKUP_API_URL,
+          'http://localhost:5000'
+        ].filter(Boolean);
 
+        for (const apiUrl of apiUrls) {
+          try {
+            const response = await fetch(`${apiUrl}/api/professionals`);
+            if (response.ok) {
+              const data = await response.json();
+              setProfessionals(data);
+              break;
+            }
+          } catch (error) {
+            console.log(`Failed to connect to ${apiUrl}:`, error);
+            continue;
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching professionals:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfessionals();
+  }, []);
 
   const filteredProfessionals = professionals.filter(prof => {
     // Category filtering
     const matchesCategory = selectedCategory === 'all' || prof.category === selectedCategory;
-    
+
     // Search filtering
-    const matchesSearch = searchTerm === '' || 
+    const matchesSearch = searchTerm === '' ||
                          prof.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          prof.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          (prof.location && prof.location.toLowerCase().includes(searchTerm.toLowerCase())) ||
                          (prof.specialty && prof.specialty.toLowerCase().includes(searchTerm.toLowerCase()));
-    
+
     // Debug logging
     if (selectedCategory === 'photography') {
       console.log('Selected category:', selectedCategory);
       console.log('Professional category:', prof.category);
       console.log('Matches category:', matchesCategory);
     }
-    
+
     return matchesCategory && matchesSearch;
   });
 
@@ -253,7 +125,7 @@ const Browse = () => {
         <div className="mb-8">
           <h1 className={`text-4xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>Browse Professionals</h1>
           <p className={`text-lg ${isDark ? 'text-gray-300' : 'text-gray-600'} mb-6`}>Find verified event professionals for your perfect celebration</p>
-          
+
           {/* Search and Filter */}
           <div className={`${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white'} rounded-xl shadow-lg p-6 transition-colors duration-300`}>
             <div className="flex flex-col md:flex-row gap-4">
@@ -309,8 +181,8 @@ const Browse = () => {
         {!loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProfessionals.map((professional, index) => (
-            <div 
-              key={professional.id} 
+            <div
+              key={professional.id}
               className={`group ${isDark ? 'bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700' : 'bg-gradient-to-br from-white to-blue-50'} rounded-3xl shadow-xl overflow-hidden hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-3 hover:rotate-1 relative`}
               style={{ animationDelay: `${index * 100}ms` }}
             >
@@ -319,11 +191,11 @@ const Browse = () => {
                 <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500 rounded-full -translate-y-12 translate-x-12"></div>
                 <div className="absolute bottom-0 left-0 w-16 h-16 bg-purple-500 rounded-full translate-y-8 -translate-x-8"></div>
               </div>
-              
+
               <div className="relative">
                 <div className="relative overflow-hidden">
                   <img
-                    src={professional.image}
+                    src={professional.portfolio && professional.portfolio.length > 0 ? `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${professional.portfolio[0].image_url}` : professional.image}
                     alt={professional.name}
                     className="w-full h-72 object-cover object-center transition-transform duration-500 group-hover:scale-110"
                   />
@@ -347,7 +219,7 @@ const Browse = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="p-8 relative z-10">
                 <div className="mb-4">
                   <h3 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-2 group-hover:text-blue-600 transition-colors duration-300`}>
@@ -364,7 +236,7 @@ const Browse = () => {
                   </div>
                 </div>
                 <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} mb-4 text-sm leading-relaxed line-clamp-2`}>{professional.bio || 'Professional event service provider with years of experience delivering exceptional results.'}</p>
-                
+
                 {/* Enhanced Info Cards */}
                 <div className="grid grid-cols-2 gap-3 mb-4">
                   <div className={`${isDark ? 'bg-gray-700/50' : 'bg-blue-50'} backdrop-blur-sm rounded-xl p-3 border border-white/20`}>
@@ -377,23 +249,23 @@ const Browse = () => {
                       </span>
                     </div>
                   </div>
-                  
+
                   <div className={`${isDark ? 'bg-gray-700/50' : 'bg-green-50'} backdrop-blur-sm rounded-xl p-3 border border-white/20`}>
                     <div className="flex items-center text-sm">
                       <svg className="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                       </svg>
                       <span className="text-green-600 font-bold text-xs truncate">
-                        {professional.pricing ? 
-                          (professional.pricing.startsWith('$') ? 
-                            `KSh${(parseFloat(professional.pricing.replace(/[$,]/g, '')) * 130).toLocaleString()}` : 
-                            professional.pricing.replace('$', 'KSh')) : 
+                        {professional.pricing ?
+                          (professional.pricing.startsWith('$') ?
+                            `KSh${(parseFloat(professional.pricing.replace(/[$,]/g, '')) * 130).toLocaleString()}` :
+                            professional.pricing.replace('$', 'KSh')) :
                           'Contact for pricing'}
                       </span>
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Enhanced Rating Display */}
                 <div className={`${isDark ? 'bg-gray-700/50' : 'bg-yellow-50'} backdrop-blur-sm rounded-xl p-4 mb-6 border border-white/20`}>
                   <div className="flex items-center justify-between">
@@ -414,16 +286,16 @@ const Browse = () => {
                     </span>
                   </div>
                   <div className="mt-2 bg-yellow-200 rounded-full h-2">
-                    <div 
+                    <div
                       className="bg-gradient-to-r from-yellow-400 to-orange-500 h-2 rounded-full transition-all duration-500"
                       style={{ width: `${(professional.rating / 5) * 100}%` }}
                     ></div>
                   </div>
                 </div>
-                
+
                 {/* Enhanced Action Buttons */}
                 <div className="flex flex-col gap-3">
-                  <a 
+                  <a
                     href={`mailto:${professional.email}?subject=Event Inquiry - ${professional.specialty}&body=Hi ${professional.name},%0D%0A%0D%0AI'm interested in your ${professional.specialty.toLowerCase()} services for my upcoming event.%0D%0A%0D%0APlease let me know your availability and we can discuss the details.%0D%0A%0D%0AThank you!`}
                     className={`${isDark ? 'bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700' : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'} text-white py-3 px-6 rounded-xl font-bold transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg flex items-center justify-center group`}
                   >
@@ -433,7 +305,7 @@ const Browse = () => {
                     Contact Professional
                   </a>
                   <div className="flex gap-2">
-                    <a 
+                    <a
                       href={`tel:+254${Math.floor(Math.random() * 900000000) + 700000000}`}
                       className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-xl font-semibold transition-all duration-300 text-center transform hover:scale-105 flex items-center justify-center"
                     >
@@ -442,10 +314,10 @@ const Browse = () => {
                       </svg>
                       Call
                     </a>
-                    <button 
+                    <button
                       onClick={() => handleSaveProfessional(professional.id)}
-                      className={`flex-1 ${savedProfessionals.includes(professional.id) 
-                        ? 'bg-red-500 hover:bg-red-600 text-white' 
+                      className={`flex-1 ${savedProfessionals.includes(professional.id)
+                        ? 'bg-red-500 hover:bg-red-600 text-white'
                         : isDark ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
                       } py-2 px-4 rounded-xl font-semibold transition-all duration-300 text-center transform hover:scale-105 flex items-center justify-center`}
                     >
@@ -469,21 +341,21 @@ const Browse = () => {
             </svg>
             <h3 className={`text-xl font-semibold ${isDark ? 'text-white' : 'text-gray-900'} mb-2`}>No professionals found</h3>
             <p className={`${isDark ? 'text-gray-400' : 'text-gray-500'} mb-4`}>
-              {professionals.length === 0 
-                ? 'No professionals have registered yet. Be the first to join!' 
+              {professionals.length === 0
+                ? 'No professionals have registered yet. Be the first to join!'
                 : 'Try adjusting your search criteria or browse all categories.'}
             </p>
             <div className="space-x-4">
               {professionals.length > 0 && (
-                <button 
+                <button
                   onClick={() => {setSearchTerm(''); setSelectedCategory('all');}}
                   className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   Clear Filters
                 </button>
               )}
-              <Link 
-                to="/signup" 
+              <Link
+                to="/signup"
                 className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors inline-block"
               >
                 Join as Professional

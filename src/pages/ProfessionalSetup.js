@@ -19,7 +19,7 @@ const ProfessionalSetup = () => {
 
   const categories = [
     'photographer',
-    'videographer', 
+    'videographer',
     'dj',
     'producer',
     'web designer',
@@ -44,7 +44,7 @@ const ProfessionalSetup = () => {
   };
 
   const addPortfolioItem = () => {
-    if (formData.portfolio.length < 10) {
+    if (formData.portfolio.length < 4) {
       const newItem = {
         id: Date.now(),
         title: '',
@@ -113,6 +113,8 @@ const ProfessionalSetup = () => {
       for (const apiUrl of apiUrls) {
         try {
           const formDataToSend = new FormData();
+
+          // Append text fields
           formDataToSend.append('category', formData.category);
           formDataToSend.append('specialty', formData.specialty);
           formDataToSend.append('location', formData.location);
@@ -123,6 +125,15 @@ const ProfessionalSetup = () => {
           if (formData.profilePhoto) {
             formDataToSend.append('profilePhoto', formData.profilePhoto);
           }
+
+          // Append portfolio files and metadata
+          formData.portfolio.forEach((item, index) => {
+            if (item.image) {
+              formDataToSend.append('portfolio_images', item.image);
+              formDataToSend.append('portfolio_title', item.title);
+              formDataToSend.append('portfolio_description', item.description);
+            }
+          });
 
           const response = await fetch(`${apiUrl}/api/professional-profile`, {
             method: 'POST',
@@ -270,8 +281,8 @@ const ProfessionalSetup = () => {
 
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold">Portfolio (Max 10 photos)</h3>
-                {formData.portfolio.length < 10 && (
+                <h3 className="text-lg font-semibold">Portfolio (Max 4 photos)</h3>
+                {formData.portfolio.length < 4 && (
                   <button
                     type="button"
                     onClick={addPortfolioItem}

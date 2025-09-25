@@ -9,6 +9,7 @@ const Browse = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [professionals, setProfessionals] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const [categories, setCategories] = useState([
     { id: 'all', name: 'All Categories' },
     { id: 'wedding', name: 'Wedding Planning' },
@@ -155,8 +156,17 @@ const Browse = () => {
           </p>
         </div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="text-center py-16">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Loading professionals...</p>
+          </div>
+        )}
+
         {/* Professionals Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {!loading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProfessionals.map((professional, index) => (
             <div
               key={professional.id}
@@ -308,7 +318,8 @@ const Browse = () => {
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        )}
 
         {filteredProfessionals.length === 0 && (
           <div className="text-center py-16">

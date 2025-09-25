@@ -9,11 +9,13 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///eventconnect.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = 'your-secret-key-change-in-production'
@@ -45,6 +47,7 @@ class ProfessionalProfile(db.Model):
     phone = db.Column(db.String(20))
     bio = db.Column(db.Text)
     pricing = db.Column(db.String(100))
+    profile_image = db.Column(db.String(255), default='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face')
     setup_complete = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -231,7 +234,7 @@ def get_professionals():
                     'reviews': 25,
                     'verified': True,
                     'portfolio': portfolio_items,
-                    'image': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face'
+                    'image': profile.profile_image or 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face'
                 })
     # Add sample professionals for all categories
     if len([r for r in result if r.get('verified')]) < 5:
@@ -278,11 +281,11 @@ def professional_profile():
         user_id = data.get('user_id', 1)  # Default to user 1 for testing
 
     profile = ProfessionalProfile.query.filter_by(user_id=user_id).first()
-    
+
     if request.method == 'PUT' and profile:
         # Delete old portfolios on update
         Portfolio.query.filter_by(professional_profile_id=profile.id).delete()
-    
+
     # Handle text fields - prefer form data for multipart, fallback to json
     if request.form:
         category = request.form.get('category', '')
@@ -301,7 +304,7 @@ def professional_profile():
         bio = json_data.get('bio', '')
         pricing = json_data.get('pricing')
         setup_complete = json_data.get('setupComplete', False)
-    
+
     if not profile:
         # Create new profile
         profile = ProfessionalProfile(
@@ -324,7 +327,7 @@ def professional_profile():
         profile.bio = bio or profile.bio
         profile.pricing = pricing or profile.pricing
         profile.setup_complete = setup_complete
-    
+
     db.session.commit()
     
     # Handle portfolio uploads (only if files present)
@@ -380,6 +383,7 @@ def bookings():
         return jsonify({'message': 'Booking created', 'id': booking.id}), 201
 
 if __name__ == '__main__':
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     with app.app_context():
         db.create_all()
     app.run(debug=True)

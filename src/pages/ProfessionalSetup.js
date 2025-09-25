@@ -12,12 +12,14 @@ const ProfessionalSetup = () => {
     phone: '',
     bio: '',
     pricing: '',
+    profilePhoto: null,
+    profilePhotoPreview: null,
     portfolio: []
   });
 
   const categories = [
     'photographer',
-    'videographer', 
+    'videographer',
     'dj',
     'producer',
     'web designer',
@@ -26,6 +28,20 @@ const ProfessionalSetup = () => {
     'decorator',
     'venue coordinator'
   ];
+
+  const handleProfilePhotoUpload = (file) => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setFormData({
+          ...formData,
+          profilePhoto: file,
+          profilePhotoPreview: e.target.result
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const addPortfolioItem = () => {
     if (formData.portfolio.length < 4) {
@@ -106,6 +122,11 @@ const ProfessionalSetup = () => {
           formDataToSend.append('bio', formData.bio);
           formDataToSend.append('pricing', formData.pricing);
           formDataToSend.append('setupComplete', 'true');
+
+          // Append profile photo if exists
+          if (formData.profilePhoto) {
+            formDataToSend.append('profilePhoto', formData.profilePhoto);
+          }
 
           // Append portfolio files and metadata
           formData.portfolio.forEach((item, index) => {
@@ -237,6 +258,30 @@ const ProfessionalSetup = () => {
             </div>
 
             <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Profile Photo</label>
+              <div className="flex items-center space-x-4">
+                {formData.profilePhotoPreview ? (
+                  <img
+                    src={formData.profilePhotoPreview}
+                    alt="Profile Preview"
+                    className="w-20 h-20 object-cover rounded-full border-2 border-gray-300"
+                  />
+                ) : (
+                  <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center border-2 border-gray-300">
+                    <span className="text-gray-400 text-sm">No photo</span>
+                  </div>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleProfilePhotoUpload(e.target.files[0])}
+                  className="px-3 py-2 border border-gray-300 rounded-md file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                />
+              </div>
+              <p className="text-sm text-gray-500 mt-1">Upload a professional photo to showcase your profile</p>
+            </div>
+
+            <div>
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold">Portfolio (Max 4 photos)</h3>
                 {formData.portfolio.length < 4 && (
@@ -297,7 +342,7 @@ const ProfessionalSetup = () => {
 
               {formData.portfolio.length === 0 && (
                 <div className="text-center py-8 text-gray-500 border-2 border-dashed border-gray-300 rounded-lg">
-                  <p>No portfolio photos yet. Add your best work to attract clients!</p>
+                  <p>No portfolio photos yet. Add up to 4 of your best work to attract clients!</p>
                 </div>
               )}
             </div>

@@ -5,16 +5,17 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
-import uuid
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
 UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///eventconnect.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = 'your-secret-key-change-in-production'
@@ -281,11 +282,11 @@ def professional_profile():
         user_id = data.get('user_id', 1)  # Default to user 1 for testing
 
     profile = ProfessionalProfile.query.filter_by(user_id=user_id).first()
-    
+
     if request.method == 'PUT' and profile:
         # Delete old portfolios on update
         Portfolio.query.filter_by(professional_profile_id=profile.id).delete()
-    
+
     # Handle text fields - prefer form data for multipart, fallback to json
     if request.form:
         category = request.form.get('category', '')
@@ -304,7 +305,7 @@ def professional_profile():
         bio = json_data.get('bio', '')
         pricing = json_data.get('pricing')
         setup_complete = json_data.get('setupComplete', False)
-    
+
     if not profile:
         # Create new profile
         profile = ProfessionalProfile(
@@ -327,9 +328,9 @@ def professional_profile():
         profile.bio = bio or profile.bio
         profile.pricing = pricing or profile.pricing
         profile.setup_complete = setup_complete
-    
+
     db.session.commit()
-    
+
     # Handle profile photo upload
     if 'profilePhoto' in request.files:
         file = request.files['profilePhoto']

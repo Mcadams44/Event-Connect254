@@ -1,8 +1,15 @@
-<<<<<<< HEAD
-# TODO: Implement Portfolio Image Upload Functionality and Resolve Merge Conflicts
+# Add Professional Profile Photos to Browse Cards and Implement Portfolio Upload
 
 ## Overview
-This TODO tracks the implementation of portfolio image upload in the frontend, integration with the existing backend API, and resolution of merge conflicts in the GitHub PR for the "nathan-functionalities" branch. The goal is to enable professionals to upload real images to their portfolio in Profile.js, display them dynamically in FeaturedProfessionals.js, and ensure the PR can be merged cleanly.
+This TODO tracks the completion of profile photo integration and portfolio image upload functionality. Profile photos are now integrated into Browse cards and ProfessionalSetup. The next phase adds portfolio uploads in Profile.js, dynamic display in FeaturedProfessionals.js, and resolves any remaining merge conflicts.
+
+## Completed: Profile Photo Integration
+- [x] Update backend ProfessionalProfile model to include profile_image field
+- [x] Modify professional-profile API endpoint to handle profile_image upload
+- [x] Update get_professionals API to return profile_image for each professional
+- [x] Add profile photo upload field to ProfessionalSetup.js form
+- [x] Update Browse.js to fetch professionals from API instead of using hardcoded data
+- [x] Test the photo upload and display functionality
 
 ## Steps
 
@@ -39,10 +46,10 @@ Status: [ ] Not started
 
 Status: [ ] Not started
 
-### Step 4: Resolve PR Conflicts via Local Merge
+### Step 4: Resolve Any Remaining PR Conflicts
 - Fetch upstream: `git fetch upstream`.
 - Merge main into local branch: `git merge upstream/main`.
-- Manually resolve conflicts in Profile.js and FeaturedProfessionals.js (combine upload logic with any upstream changes, remove markers).
+- Manually resolve any remaining conflicts (combine upload logic with upstream changes, remove markers).
 - Commit: `git add . && git commit -m "Resolve merge conflicts: integrate portfolio upload"`.
 - Push: `git push origin nathan-functionalities` (updates PR automatically).
 
@@ -61,14 +68,3 @@ Status: [ ] Not started
 - Use FormData for multipart uploads; include 'user_id' or rely on JWT.
 - Fallback images: Use Unsplash placeholders if no upload.
 - After Step 2 completion, update this TODO by editing the status checkboxes.
-=======
-# Add Professional Profile Photos to Browse Cards
-
-## Tasks
-- [x] Update backend ProfessionalProfile model to include profile_image field
-- [x] Modify professional-profile API endpoint to handle profile_image upload
-- [x] Update get_professionals API to return profile_image for each professional
-- [x] Add profile photo upload field to ProfessionalSetup.js form
-- [x] Update Browse.js to fetch professionals from API instead of using hardcoded data
-- [ ] Test the photo upload and display functionality
->>>>>>> 611ce28 (add changes)

@@ -7,56 +7,10 @@ const Browse = () => {
   const location = useLocation();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-<<<<<<< HEAD
-<<<<<<< HEAD
   const [savedProfessionals, setSavedProfessionals] = useState([]);
   const [professionals, setProfessionals] = useState([]);
   const [loading, setLoading] = useState(true);
 
-=======
-  const [professionals, setProfessionals] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProfessionals = async () => {
-      try {
-        const apiUrls = [
-          process.env.REACT_APP_API_URL,
-          process.env.REACT_APP_BACKUP_API_URL,
-          'http://localhost:5000'
-        ].filter(Boolean);
-
-        for (const apiUrl of apiUrls) {
-          try {
-            const response = await fetch(`${apiUrl}/api/professionals`);
-            if (response.ok) {
-              const data = await response.json();
-              setProfessionals(data);
-              setLoading(false);
-              return;
-            }
-          } catch (error) {
-            console.log(`Failed to connect to ${apiUrl}:`, error);
-            continue;
-          }
-        }
-        // If all APIs fail, set empty array
-        setProfessionals([]);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching professionals:', error);
-        setProfessionals([]);
-        setLoading(false);
-      }
-    };
-
-    fetchProfessionals();
-  }, []);
->>>>>>> 611ce28 (add changes)
-=======
-  const [professionals, setProfessionals] = useState([]);
-  const [loading, setLoading] = useState(true);
->>>>>>> 96faf41 (add changes)
   const [categories, setCategories] = useState([
     { id: 'all', name: 'All Categories' },
     { id: 'wedding', name: 'Wedding Planning' },
@@ -87,33 +41,6 @@ const Browse = () => {
           process.env.REACT_APP_BACKUP_API_URL,
           'http://localhost:5000'
         ].filter(Boolean);
-<<<<<<< HEAD
-=======
-
-        for (const apiUrl of apiUrls) {
-          try {
-            const response = await fetch(`${apiUrl}/api/professionals`);
-            if (response.ok) {
-              const data = await response.json();
-              setProfessionals(data);
-              break;
-            }
-          } catch (error) {
-            console.log(`Failed to connect to ${apiUrl}:`, error);
-            continue;
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching professionals:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfessionals();
-  }, []);
-
->>>>>>> 96faf41 (add changes)
 
         for (const apiUrl of apiUrls) {
           try {
@@ -385,7 +312,7 @@ const Browse = () => {
                   </a>
                   <div className="flex gap-2">
                     <a
-                      href={`tel:+254${Math.floor(Math.random() * 900000000) + 700000000}`}
+                      href={`tel:${professional.phone || ''}`}
                       className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-xl font-semibold transition-all duration-300 text-center transform hover:scale-105 flex items-center justify-center"
                     >
                       <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

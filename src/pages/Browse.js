@@ -162,81 +162,203 @@ const Browse = () => {
           {filteredProfessionals.map((professional, index) => (
             <div 
               key={professional.id} 
-              className={`${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white'} rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2`}
+              className={`group ${isDark ? 'bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700' : 'bg-gradient-to-br from-white to-blue-50'} rounded-3xl shadow-xl overflow-hidden hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-3 hover:rotate-1 relative`}
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              <div className="relative">
+              {/* Background Pattern */}
+              <div className="absolute inset-0 opacity-5">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500 rounded-full -translate-y-12 translate-x-12"></div>
+                <div className="absolute bottom-0 left-0 w-16 h-16 bg-purple-500 rounded-full translate-y-8 -translate-x-8"></div>
+              </div>
+              
+                <div className="relative overflow-hidden">
+                  <img
+                    src={professional.image}
+                    alt={professional.name}
+                    className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  {/* Enhanced Badges */}
+                  <div className="absolute top-4 right-4 flex flex-col gap-2">
+                    {professional.verified && (
+                      <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-2 rounded-full text-xs font-bold flex items-center shadow-lg backdrop-blur-sm border border-white/20">
+                        <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        Verified Pro
+                      </div>
+                    )}
+                    <div className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg backdrop-blur-sm border border-white/20">
+                      ⭐ Top Rated
+                    </div>
+                  </div>
+                  <div className="absolute bottom-4 left-4 bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold border border-white/20 shadow-lg">
+                    ✨ {professional.specialty}
+>>>>>>> 44a4242fe19023b027ab09b93e09b01edc8ff5b7
+=======
+              <div className="relative overflow-hidden">
                 <img
                   src={professional.portfolio && professional.portfolio.length > 0 ? `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${professional.portfolio[0].image_url}` : professional.image}
                   alt={professional.name}
-                  className="w-full h-64 object-cover"
+                  className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-110"
+                  onError={(e) => {
+                    e.target.src = professional.image;
+                  }}
                 />
-                {professional.verified && (
-                  <div className="absolute top-4 right-4 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center">
-                    <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                    Verified
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                {/* Enhanced Badges */}
+                <div className="absolute top-4 right-4 flex flex-col gap-2">
+                  {professional.verified && (
+                    <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-2 rounded-full text-xs font-bold flex items-center shadow-lg backdrop-blur-sm border border-white/20">
+                      <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      Verified Pro
+                    </div>
+                  )}
+                  <div className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg backdrop-blur-sm border border-white/20">
+                    ⭐ Top Rated
+                  </div>
+                </div>
+                {professional.portfolio && professional.portfolio.length > 1 && (
+                  <div className="absolute bottom-4 right-4 bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold border border-white/20 shadow-lg">
+                    +{professional.portfolio.length - 1} more
                   </div>
                 )}
-                <div className="absolute bottom-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-medium">
-                  {professional.specialty}
+                <div className="absolute bottom-4 left-4 bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold border border-white/20 shadow-lg">
+                  ✨ {professional.specialty}
+                </div>
+              </div>
+=======
+                <div className="relative overflow-hidden">
+                  <img
+                    src={professional.image}
+                    alt={professional.name}
+                    className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  {/* Enhanced Badges */}
+                  <div className="absolute top-4 right-4 flex flex-col gap-2">
+                    {professional.verified && (
+                      <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-2 rounded-full text-xs font-bold flex items-center shadow-lg backdrop-blur-sm border border-white/20">
+                        <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        Verified Pro
+                      </div>
+                    )}
+                    <div className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg backdrop-blur-sm border border-white/20">
+                      ⭐ Top Rated
+                    </div>
+                  </div>
+                  <div className="absolute bottom-4 left-4 bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold border border-white/20 shadow-lg">
+                    ✨ {professional.specialty}
+>>>>>>> 44a4242fe19023b027ab09b93e09b01edc8ff5b7
+                  </div>
                 </div>
               </div>
               
-              <div className="p-6">
-                <h3 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-2`}>
-                  {professional.name || professional.username}
-                </h3>
-                <p className="text-blue-600 font-medium mb-1 capitalize">{professional.category}</p>
-                <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} mb-3 text-sm line-clamp-2`}>{professional.bio || 'Professional event service provider'}</p>
-                
-                <div className="space-y-2 mb-4">
-                  <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} flex items-center text-sm`}>
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    </svg>
-                    {professional.location || 'Location not specified'}
-                  </p>
-                  
-                  <p className="text-green-600 font-semibold flex items-center text-sm">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                    </svg>
-                    {professional.pricing ? 
-                      (professional.pricing.startsWith('$') ? 
-                        `KSh${(parseFloat(professional.pricing.replace(/[$,]/g, '')) * 130).toLocaleString()}` : 
-                        professional.pricing.replace('$', 'KSh')) : 
-                      'Contact for pricing'}
-                  </p>
-                </div>
-                
-                <div className="flex items-center mb-4">
-                  <div className="flex text-yellow-400">
-                    {[...Array(5)].map((_, i) => (
-                      <svg key={i} className={`w-4 h-4 ${i < Math.floor(professional.rating || 4.5) ? 'fill-current' : 'text-gray-300'}`} viewBox="0 0 20 20">
-                        <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
-                      </svg>
-                    ))}
+              <div className="p-8 relative z-10">
+                <div className="mb-4">
+                  <h3 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-2 group-hover:text-blue-600 transition-colors duration-300`}>
+                    {professional.name || professional.username}
+                  </h3>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold text-sm px-3 py-1 rounded-full capitalize">
+                      {professional.category}
+                    </span>
+                    <div className="flex items-center bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
+                      <span className="text-yellow-500 mr-1">🏆</span>
+                      Premium
+                    </div>
                   </div>
-                  <span className="ml-2 text-sm text-gray-600 font-medium">
-                    {professional.rating || '4.5'} ({professional.reviews || '12'} reviews)
-                  </span>
+                </div>
+                <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} mb-4 text-sm leading-relaxed line-clamp-2`}>{professional.bio || 'Professional event service provider with years of experience delivering exceptional results.'}</p>
+                
+                {/* Enhanced Info Cards */}
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <div className={`${isDark ? 'bg-gray-700/50' : 'bg-blue-50'} backdrop-blur-sm rounded-xl p-3 border border-white/20`}>
+                    <div className="flex items-center text-sm">
+                      <svg className="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      </svg>
+                      <span className={`${isDark ? 'text-gray-300' : 'text-gray-700'} font-medium truncate`}>
+                        {professional.location || 'Location TBD'}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className={`${isDark ? 'bg-gray-700/50' : 'bg-green-50'} backdrop-blur-sm rounded-xl p-3 border border-white/20`}>
+                    <div className="flex items-center text-sm">
+                      <svg className="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                      </svg>
+                      <span className="text-green-600 font-bold text-xs truncate">
+                        {professional.pricing ? 
+                          (professional.pricing.startsWith('$') ? 
+                            `KSh${(parseFloat(professional.pricing.replace(/[$,]/g, '')) * 130).toLocaleString()}` : 
+                            professional.pricing.replace('$', 'KSh')) : 
+                          'Contact for pricing'}
+                      </span>
+                    </div>
+                  </div>
                 </div>
                 
-                <div className="flex space-x-2">
+                {/* Enhanced Rating Display */}
+                <div className={`${isDark ? 'bg-gray-700/50' : 'bg-yellow-50'} backdrop-blur-sm rounded-xl p-4 mb-6 border border-white/20`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="flex text-yellow-400 mr-2">
+                        {[...Array(5)].map((_, i) => (
+                          <svg key={i} className={`w-5 h-5 ${i < Math.floor(professional.rating || 4.5) ? 'fill-current' : 'text-gray-300'}`} viewBox="0 0 20 20">
+                            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                          </svg>
+                        ))}
+                      </div>
+                      <span className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        {professional.rating || '4.5'}
+                      </span>
+                    </div>
+                    <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'} font-medium`}>
+                      ({professional.reviews || '12'} reviews)
+                    </span>
+                  </div>
+                  <div className="mt-2 bg-yellow-200 rounded-full h-2">
+                    <div 
+                      className="bg-gradient-to-r from-yellow-400 to-orange-500 h-2 rounded-full transition-all duration-500"
+                      style={{ width: `${((professional.rating || 4.5) / 5) * 100}%` }}
+                    ></div>
+                  </div>
+                </div>
+                
+                {/* Enhanced Action Buttons */}
+                <div className="flex flex-col gap-3">
                   <a 
                     href={`mailto:${professional.email}`}
-                    className={`flex-1 ${isDark ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-blue-600 hover:bg-blue-700'} text-white py-2 px-4 rounded-lg font-medium transition-all duration-300 text-center text-sm`}
+                    className={`${isDark ? 'bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700' : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'} text-white py-3 px-6 rounded-xl font-bold transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg flex items-center justify-center group`}
                   >
-                    Email
+                    <svg className="w-5 h-5 mr-2 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Contact Professional
                   </a>
-                  <a 
-                    href={`tel:${professional.phone || ''}`}
-                    className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-all duration-300 text-center text-sm"
-                  >
-                    Call
-                  </a>
+                  <div className="flex gap-2">
+                    <a 
+                      href={`tel:${professional.phone || ''}`}
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-xl font-semibold transition-all duration-300 text-center transform hover:scale-105 flex items-center justify-center"
+                    >
+                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                      Call
+                    </a>
+                    <button className={`flex-1 ${isDark ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'} py-2 px-4 rounded-xl font-semibold transition-all duration-300 text-center transform hover:scale-105 flex items-center justify-center`}>
+                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                      </svg>
+                      Save
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

@@ -122,6 +122,8 @@ const ProfessionalSetup = () => {
           formDataToSend.append('bio', formData.bio);
           formDataToSend.append('pricing', formData.pricing);
           formDataToSend.append('setupComplete', 'true');
+
+          // Append profile photo if exists
           if (formData.profilePhoto) {
             formDataToSend.append('profilePhoto', formData.profilePhoto);
           }
@@ -340,7 +342,7 @@ const ProfessionalSetup = () => {
 
               {formData.portfolio.length === 0 && (
                 <div className="text-center py-8 text-gray-500 border-2 border-dashed border-gray-300 rounded-lg">
-                  <p>No portfolio photos yet. Add your best work to attract clients!</p>
+                  <p>No portfolio photos yet. Add up to 4 of your best work to attract clients!</p>
                 </div>
               )}
             </div>

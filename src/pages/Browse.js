@@ -192,31 +192,37 @@ const Browse = () => {
                 <div className="absolute bottom-0 left-0 w-16 h-16 bg-purple-500 rounded-full translate-y-8 -translate-x-8"></div>
               </div>
 
-              <div className="relative">
-                <div className="relative overflow-hidden">
-                  <img
-                    src={professional.portfolio && professional.portfolio.length > 0 ? `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${professional.portfolio[0].image_url}` : professional.image}
-                    alt={professional.name}
-                    className="w-full h-72 object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  {/* Enhanced Badges */}
-                  <div className="absolute top-4 right-4 flex flex-col gap-2">
-                    {professional.verified && (
-                      <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-2 rounded-full text-xs font-bold flex items-center shadow-lg backdrop-blur-sm border border-white/20">
-                        <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                        Verified Pro
-                      </div>
-                    )}
-                    <div className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg backdrop-blur-sm border border-white/20">
-                      ⭐ Top Rated
+              <div className="relative overflow-hidden">
+                <img
+                  src={professional.portfolio && professional.portfolio.length > 0 ? `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${professional.portfolio[0].image_url}` : professional.image}
+                  alt={professional.name}
+                  className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-110"
+                  onError={(e) => {
+                    e.target.src = professional.image;
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                {/* Enhanced Badges */}
+                <div className="absolute top-4 right-4 flex flex-col gap-2">
+                  {professional.verified && (
+                    <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-2 rounded-full text-xs font-bold flex items-center shadow-lg backdrop-blur-sm border border-white/20">
+                      <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      Verified Pro
                     </div>
+                  )}
+                  <div className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg backdrop-blur-sm border border-white/20">
+                    ⭐ Top Rated
                   </div>
-                  <div className="absolute bottom-4 left-4 bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold border border-white/20 shadow-lg">
-                    ✨ {professional.specialty}
+                </div>
+                {professional.portfolio && professional.portfolio.length > 1 && (
+                  <div className="absolute bottom-4 right-4 bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold border border-white/20 shadow-lg">
+                    +{professional.portfolio.length - 1} more
                   </div>
+                )}
+                <div className="absolute bottom-4 left-4 bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold border border-white/20 shadow-lg">
+                  ✨ {professional.specialty}
                 </div>
               </div>
 
@@ -296,7 +302,7 @@ const Browse = () => {
                 {/* Enhanced Action Buttons */}
                 <div className="flex flex-col gap-3">
                   <a
-                    href={`mailto:${professional.email}?subject=Event Inquiry - ${professional.specialty}&body=Hi ${professional.name},%0D%0A%0D%0AI'm interested in your ${professional.specialty.toLowerCase()} services for my upcoming event.%0D%0A%0D%0APlease let me know your availability and we can discuss the details.%0D%0A%0D%0AThank you!`}
+                    href={`mailto:${professional.email}`}
                     className={`${isDark ? 'bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700' : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'} text-white py-3 px-6 rounded-xl font-bold transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg flex items-center justify-center group`}
                   >
                     <svg className="w-5 h-5 mr-2 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -306,7 +312,7 @@ const Browse = () => {
                   </a>
                   <div className="flex gap-2">
                     <a
-                      href={`tel:+254${Math.floor(Math.random() * 900000000) + 700000000}`}
+                      href={`tel:${professional.phone || ''}`}
                       className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-xl font-semibold transition-all duration-300 text-center transform hover:scale-105 flex items-center justify-center"
                     >
                       <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

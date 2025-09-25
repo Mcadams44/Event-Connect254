@@ -7,10 +7,51 @@ const Browse = () => {
   const location = useLocation();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+<<<<<<< HEAD
   const [savedProfessionals, setSavedProfessionals] = useState([]);
   const [professionals, setProfessionals] = useState([]);
   const [loading, setLoading] = useState(true);
 
+=======
+  const [professionals, setProfessionals] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProfessionals = async () => {
+      try {
+        const apiUrls = [
+          process.env.REACT_APP_API_URL,
+          process.env.REACT_APP_BACKUP_API_URL,
+          'http://localhost:5000'
+        ].filter(Boolean);
+
+        for (const apiUrl of apiUrls) {
+          try {
+            const response = await fetch(`${apiUrl}/api/professionals`);
+            if (response.ok) {
+              const data = await response.json();
+              setProfessionals(data);
+              setLoading(false);
+              return;
+            }
+          } catch (error) {
+            console.log(`Failed to connect to ${apiUrl}:`, error);
+            continue;
+          }
+        }
+        // If all APIs fail, set empty array
+        setProfessionals([]);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching professionals:', error);
+        setProfessionals([]);
+        setLoading(false);
+      }
+    };
+
+    fetchProfessionals();
+  }, []);
+>>>>>>> 611ce28 (add changes)
   const [categories, setCategories] = useState([
     { id: 'all', name: 'All Categories' },
     { id: 'wedding', name: 'Wedding Planning' },

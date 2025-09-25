@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # TODO: Implement Portfolio Image Upload Functionality and Resolve Merge Conflicts
 
 ## Overview
@@ -60,3 +61,14 @@ Status: [ ] Not started
 - Use FormData for multipart uploads; include 'user_id' or rely on JWT.
 - Fallback images: Use Unsplash placeholders if no upload.
 - After Step 2 completion, update this TODO by editing the status checkboxes.
+=======
+# Add Professional Profile Photos to Browse Cards
+
+## Tasks
+- [x] Update backend ProfessionalProfile model to include profile_image field
+- [x] Modify professional-profile API endpoint to handle profile_image upload
+- [x] Update get_professionals API to return profile_image for each professional
+- [x] Add profile photo upload field to ProfessionalSetup.js form
+- [x] Update Browse.js to fetch professionals from API instead of using hardcoded data
+- [ ] Test the photo upload and display functionality
+>>>>>>> 611ce28 (add changes)

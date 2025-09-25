@@ -28,7 +28,7 @@ const ProfessionalSetup = () => {
   ];
 
   const addPortfolioItem = () => {
-    if (formData.portfolio.length < 10) {
+    if (formData.portfolio.length < 4) {
       const newItem = {
         id: Date.now(),
         title: '',
@@ -72,10 +72,10 @@ const ProfessionalSetup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       const token = localStorage.getItem('token');
-      
+
       // If no token, just update locally
       if (!token) {
         updateProfile({
@@ -86,7 +86,7 @@ const ProfessionalSetup = () => {
         navigate('/dashboard');
         return;
       }
-      
+
       const apiUrls = [
         process.env.REACT_APP_API_URL,
         process.env.REACT_APP_BACKUP_API_URL,
@@ -96,18 +96,34 @@ const ProfessionalSetup = () => {
       let success = false;
       for (const apiUrl of apiUrls) {
         try {
+          const formDataToSend = new FormData();
+
+          // Append text fields
+          formDataToSend.append('category', formData.category);
+          formDataToSend.append('specialty', formData.specialty);
+          formDataToSend.append('location', formData.location);
+          formDataToSend.append('phone', formData.phone);
+          formDataToSend.append('bio', formData.bio);
+          formDataToSend.append('pricing', formData.pricing);
+          formDataToSend.append('setupComplete', 'true');
+
+          // Append portfolio files and metadata
+          formData.portfolio.forEach((item, index) => {
+            if (item.image) {
+              formDataToSend.append('portfolio_images', item.image);
+              formDataToSend.append('portfolio_title', item.title);
+              formDataToSend.append('portfolio_description', item.description);
+            }
+          });
+
           const response = await fetch(`${apiUrl}/api/professional-profile`, {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({
-              ...formData,
-              setupComplete: true
-            })
+            body: formDataToSend
           });
-          
+
           if (response.ok) {
             success = true;
             break;
@@ -117,7 +133,7 @@ const ProfessionalSetup = () => {
           continue;
         }
       }
-      
+
       updateProfile({
         ...formData,
         services: [formData.category],
@@ -222,8 +238,8 @@ const ProfessionalSetup = () => {
 
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold">Portfolio (Max 10 photos)</h3>
-                {formData.portfolio.length < 10 && (
+                <h3 className="text-lg font-semibold">Portfolio (Max 4 photos)</h3>
+                {formData.portfolio.length < 4 && (
                   <button
                     type="button"
                     onClick={addPortfolioItem}

@@ -11,43 +11,66 @@ const ServicesSection = () => {
   const services = [
     {
       id: 1,
-      title: "Event Photographers",
-      description: "Capture every precious moment with professional photography",
-      professionals: 450,
-      startingPrice: "KSh38,870",
-      image: "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+      title: "Wedding Planning",
+      description: "Make your special day perfect with expert wedding coordination",
+      professionals: 245,
+      startingPrice: "KSh77,870",
+      image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+      filterValue: "wedding"
     },
     {
       id: 2,
-      title: "Event Planners",
-      description: "Expert coordination for seamless event execution",
-      professionals: 320,
-      startingPrice: "KSh77,870",
-      image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+      title: "Corporate Events",
+      description: "Professional business gatherings and corporate functions",
+      professionals: 189,
+      startingPrice: "KSh130,000",
+      image: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+      filterValue: "corporate"
     },
     {
       id: 3,
-      title: "Catering Services",
-      description: "Delicious cuisine tailored to your event needs",
-      professionals: 280,
-      startingPrice: "KSh3,250/person",
-      image: "https://images.unsplash.com/photo-1555244162-803834f70033?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+      title: "Party Planning",
+      description: "Celebrate in style with expert party coordination",
+      professionals: 156,
+      startingPrice: "KSh78,000",
+      image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+      filterValue: "party"
     },
     {
       id: 4,
-      title: "Venue Coordinators",
-      description: "Perfect venues for every occasion and budget",
-      professionals: 180,
-      startingPrice: "KSh25,870",
-      image: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+      title: "Photography",
+      description: "Capture every precious moment with professional photography",
+      professionals: 320,
+      startingPrice: "KSh156,000",
+      image: "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+      filterValue: "photography"
     },
     {
       id: 5,
-      title: "Event Decorators",
-      description: "Transform spaces with stunning decorative designs",
-      professionals: 220,
-      startingPrice: "KSh51,870",
-      image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+      title: "Catering",
+      description: "Delicious culinary experiences tailored to your event",
+      professionals: 280,
+      startingPrice: "KSh4,550/person",
+      image: "https://images.unsplash.com/photo-1555244162-803834f70033?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+      filterValue: "catering"
+    },
+    {
+      id: 6,
+      title: "Entertainment",
+      description: "Keep guests engaged with professional entertainment services",
+      professionals: 195,
+      startingPrice: "KSh65,000",
+      image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+      filterValue: "entertainment"
+    },
+    {
+      id: 7,
+      title: "Venue Coordinators",
+      description: "Perfect venues for every occasion and budget",
+      professionals: 180,
+      startingPrice: "KSh85,000",
+      image: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+      filterValue: "venue"
     }
   ];
 
@@ -87,7 +110,7 @@ const ServicesSection = () => {
                 <span className="font-semibold text-blue-600">Starting at {service.startingPrice}</span>
               </div>
               
-              <Link to="/browse" className={`block w-full ${isDark ? 'bg-yellow-600/20 hover:bg-yellow-600/30 text-yellow-400' : 'bg-blue-50 hover:bg-blue-100 text-blue-600'} font-medium py-2 px-4 rounded-lg transition-colors text-center`}>
+              <Link to={`/browse?category=${service.filterValue}`} className={`block w-full ${isDark ? 'bg-yellow-600/20 hover:bg-yellow-600/30 text-yellow-400' : 'bg-blue-50 hover:bg-blue-100 text-blue-600'} font-medium py-2 px-4 rounded-lg transition-colors text-center`}>
                 View Professionals
               </Link>
             </div>
@@ -106,7 +129,6 @@ const ServicesSection = () => {
         </div>
       </div>
       <PopularServiceCategories />
-
       <RecentEventRequests />
     </section>
   );

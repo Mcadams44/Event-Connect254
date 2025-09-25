@@ -174,7 +174,7 @@ const Contact = () => {
                 <div>
                   <h4 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'} mb-1`}>Visit Us</h4>
                   <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} text-sm`}>123 Event Street</p>
-                  <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} text-sm`}>New York, NY 10001</p>
+                  <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} text-sm`}>Nairobi, Kenya</p>
                 </div>
               </div>
 

@@ -11,7 +11,8 @@ const PopularServiceCategories = () => {
       professionals: 245,
       icon: "💍",
       gradient: "from-pink-100 to-rose-100",
-      description: "Make your special day perfect"
+      description: "Make your special day perfect",
+      filterValue: "wedding"
     },
     {
       id: 2,
@@ -19,7 +20,8 @@ const PopularServiceCategories = () => {
       professionals: 189,
       icon: "🏢",
       gradient: "from-blue-100 to-indigo-100",
-      description: "Professional business gatherings"
+      description: "Professional business gatherings",
+      filterValue: "corporate"
     },
     {
       id: 3,
@@ -27,7 +29,8 @@ const PopularServiceCategories = () => {
       professionals: 156,
       icon: "🎉",
       gradient: "from-purple-100 to-pink-100",
-      description: "Celebrate in style"
+      description: "Celebrate in style",
+      filterValue: "party"
     },
     {
       id: 4,
@@ -35,7 +38,8 @@ const PopularServiceCategories = () => {
       professionals: 320,
       icon: "📸",
       gradient: "from-green-100 to-emerald-100",
-      description: "Capture precious moments"
+      description: "Capture precious moments",
+      filterValue: "photography"
     },
     {
       id: 5,
@@ -43,7 +47,8 @@ const PopularServiceCategories = () => {
       professionals: 280,
       icon: "🍽️",
       gradient: "from-orange-100 to-amber-100",
-      description: "Delicious culinary experiences"
+      description: "Delicious culinary experiences",
+      filterValue: "catering"
     },
     {
       id: 6,
@@ -51,7 +56,17 @@ const PopularServiceCategories = () => {
       professionals: 195,
       icon: "🎭",
       gradient: "from-violet-100 to-purple-100",
-      description: "Keep guests engaged"
+      description: "Keep guests engaged",
+      filterValue: "entertainment"
+    },
+    {
+      id: 7,
+      title: "Venue Coordinators",
+      professionals: 180,
+      icon: "🏛️",
+      gradient: "from-teal-100 to-cyan-100",
+      description: "Perfect event locations",
+      filterValue: "venue"
     }
   ];
 
@@ -71,7 +86,7 @@ const PopularServiceCategories = () => {
           {categories.map((category, index) => (
             <Link 
               key={category.id} 
-              to="/browse"
+              to={`/browse?category=${category.filterValue}`}
               className={`group relative overflow-hidden rounded-2xl ${isDark ? 'bg-gradient-to-br from-gray-700 to-gray-600 border border-gray-600' : `bg-gradient-to-br ${category.gradient}`} p-8 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-105`}
               style={{ animationDelay: `${index * 100}ms` }}
             >

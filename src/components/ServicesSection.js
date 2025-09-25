@@ -14,7 +14,7 @@ const ServicesSection = () => {
       title: "Event Photographers",
       description: "Capture every precious moment with professional photography",
       professionals: 450,
-      startingPrice: "$299",
+      startingPrice: "KSh38,870",
       image: "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
     },
     {
@@ -22,7 +22,7 @@ const ServicesSection = () => {
       title: "Event Planners",
       description: "Expert coordination for seamless event execution",
       professionals: 320,
-      startingPrice: "$599",
+      startingPrice: "KSh77,870",
       image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
     },
     {
@@ -30,7 +30,7 @@ const ServicesSection = () => {
       title: "Catering Services",
       description: "Delicious cuisine tailored to your event needs",
       professionals: 280,
-      startingPrice: "$25/person",
+      startingPrice: "KSh3,250/person",
       image: "https://images.unsplash.com/photo-1555244162-803834f70033?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
     },
     {
@@ -38,7 +38,7 @@ const ServicesSection = () => {
       title: "Venue Coordinators",
       description: "Perfect venues for every occasion and budget",
       professionals: 180,
-      startingPrice: "$199",
+      startingPrice: "KSh25,870",
       image: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
     },
     {
@@ -46,7 +46,7 @@ const ServicesSection = () => {
       title: "Event Decorators",
       description: "Transform spaces with stunning decorative designs",
       professionals: 220,
-      startingPrice: "$399",
+      startingPrice: "KSh51,870",
       image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
     }
   ];

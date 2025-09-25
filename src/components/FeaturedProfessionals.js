@@ -11,7 +11,7 @@ const FeaturedProfessionals = () => {
       image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
       description: "Award-winning photographer specializing in romantic wedding photography with 8+ years of experience.",
       location: "New York, NY",
-      startingPrice: "$1,200",
+      startingPrice: "KSh156,000",
       tags: ["Weddings", "Portraits", "Engagement"]
     },
     {
@@ -22,7 +22,7 @@ const FeaturedProfessionals = () => {
       image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
       description: "Full-service event planning with expertise in corporate events and luxury celebrations.",
       location: "Los Angeles, CA",
-      startingPrice: "$2,500",
+      startingPrice: "KSh325,000",
       tags: ["Corporate", "Weddings", "Luxury"]
     },
     {
@@ -33,7 +33,7 @@ const FeaturedProfessionals = () => {
       image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
       description: "Gourmet catering with farm-to-table ingredients and customizable menu options for any event size.",
       location: "Chicago, IL",
-      startingPrice: "$35/person",
+      startingPrice: "KSh4,550/person",
       tags: ["Vegan", "Organic", "Custom Menus"]
     }
   ];

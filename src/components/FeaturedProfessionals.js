@@ -268,65 +268,116 @@ const FeaturedProfessionals = ({ categoryFilter = 'all' }) => {
           >
             {professionals.map((professional) => (
               <div key={professional.id} className="w-full flex-shrink-0">
-                <div className={`${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white'} rounded-2xl shadow-xl p-8 mx-4 transition-colors duration-300`}>
-                  <div className="flex flex-col md:flex-row items-center gap-8">
-                    {/* Profile Image */}
-                    <div className="relative">
+                <div className={`${isDark ? 'bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700' : 'bg-gradient-to-br from-white to-blue-50'} rounded-3xl shadow-2xl p-8 mx-4 transition-all duration-500 hover:shadow-3xl hover:scale-[1.02] relative overflow-hidden`}>
+                  {/* Background Pattern */}
+                  <div className="absolute inset-0 opacity-5">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500 rounded-full -translate-y-16 translate-x-16"></div>
+                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-purple-500 rounded-full translate-y-12 -translate-x-12"></div>
+                  </div>
+                  
+                  <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
+                    {/* Enhanced Profile Image */}
+                    <div className="relative group">
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full animate-pulse opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
                       <img
                         src={professional.image}
                         alt={professional.name}
-                        className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
+                        className="relative w-36 h-36 rounded-full object-cover border-4 border-white shadow-2xl transform group-hover:scale-105 transition-transform duration-300"
                       />
-                      <div className="absolute -top-2 -right-2 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                      <div className="absolute -top-3 -right-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-bounce">
                         ⭐ {professional.rating}
+                      </div>
+                      <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                        ✓ Verified
                       </div>
                     </div>
 
-                    {/* Professional Info */}
+                    {/* Enhanced Professional Info */}
                     <div className="flex-1 text-center md:text-left">
-                      <h3 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-2`}>
-                        {professional.name}
-                      </h3>
-                      <p className="text-blue-600 font-semibold text-lg mb-3">
-                        {professional.role}
-                      </p>
-                      <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} mb-4`}>
+                      <div className="mb-4">
+                        <h3 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent`}>
+                          {professional.name}
+                        </h3>
+                        <div className="flex items-center justify-center md:justify-start gap-2 mb-3">
+                          <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold text-lg px-4 py-1 rounded-full shadow-lg">
+                            {professional.role}
+                          </span>
+                          <div className="flex items-center bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm font-medium">
+                            <span className="text-yellow-500 mr-1">🏆</span>
+                            Top Rated
+                          </div>
+                        </div>
+                      </div>
+                      <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} mb-6 text-lg leading-relaxed`}>
                         {professional.description}
                       </p>
                       
-                      <div className="flex flex-col sm:flex-row gap-4 items-center justify-center md:justify-start mb-4">
-                        <span className={`flex items-center ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      {/* Enhanced Stats Section */}
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div className={`${isDark ? 'bg-gray-700/50' : 'bg-white/80'} backdrop-blur-sm rounded-xl p-3 text-center border border-white/20`}>
+                          <div className="text-2xl font-bold text-blue-600">{professional.completedEvents}+</div>
+                          <div className={`text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Events</div>
+                        </div>
+                        <div className={`${isDark ? 'bg-gray-700/50' : 'bg-white/80'} backdrop-blur-sm rounded-xl p-3 text-center border border-white/20`}>
+                          <div className="text-2xl font-bold text-green-600">{professional.experience}</div>
+                          <div className={`text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Experience</div>
+                        </div>
+                        <div className={`${isDark ? 'bg-gray-700/50' : 'bg-white/80'} backdrop-blur-sm rounded-xl p-3 text-center border border-white/20`}>
+                          <div className="text-2xl font-bold text-purple-600">{professional.rating}</div>
+                          <div className={`text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Rating</div>
+                        </div>
+                        <div className={`${isDark ? 'bg-gray-700/50' : 'bg-white/80'} backdrop-blur-sm rounded-xl p-3 text-center border border-white/20`}>
+                          <div className="text-lg font-bold text-orange-600">Fast</div>
+                          <div className={`text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Response</div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex flex-col sm:flex-row gap-4 items-center justify-center md:justify-start mb-6">
+                        <div className={`flex items-center ${isDark ? 'bg-gray-700' : 'bg-blue-50'} px-4 py-2 rounded-full`}>
+                          <svg className="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                           </svg>
-                          {professional.location}
-                        </span>
-                        <span className="font-bold text-blue-600 text-lg">
+                          <span className={`${isDark ? 'text-gray-300' : 'text-gray-700'} font-medium`}>{professional.location}</span>
+                        </div>
+                        <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white px-6 py-2 rounded-full font-bold text-lg shadow-lg">
                           From {professional.startingPrice}
-                        </span>
+                        </div>
                       </div>
 
-                      <div className="flex flex-wrap gap-2 justify-center md:justify-start mb-6">
+                      {/* Enhanced Tags */}
+                      <div className="flex flex-wrap gap-3 justify-center md:justify-start mb-8">
                         {professional.tags.map((tag, index) => (
                           <span
                             key={index}
-                            className={`${isDark ? 'bg-yellow-500/20 text-yellow-400' : 'bg-blue-100 text-blue-700'} px-3 py-1 rounded-full text-sm font-medium`}
+                            className={`${isDark ? 'bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-400 border border-yellow-500/30' : 'bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border border-blue-200'} px-4 py-2 rounded-full text-sm font-semibold shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200`}
                           >
-                            {tag}
+                            ✨ {tag}
                           </span>
                         ))}
                       </div>
 
-                      <button 
-                        onClick={() => {
-                          setSelectedProfessional(professional);
-                          setIsModalOpen(true);
-                        }}
-                        className={`${isDark ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-blue-600 hover:bg-blue-700'} text-white font-medium py-3 px-6 rounded-lg transition-colors`}
-                      >
-                        View Profile & Portfolio
-                      </button>
+                      {/* Enhanced CTA Buttons */}
+                      <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+                        <button 
+                          onClick={() => {
+                            setSelectedProfessional(professional);
+                            setIsModalOpen(true);
+                          }}
+                          className={`${isDark ? 'bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700' : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'} text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center justify-center group`}
+                        >
+                          <svg className="w-5 h-5 mr-2 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                          View Full Profile
+                        </button>
+                        <button className={`${isDark ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-white hover:bg-gray-50 text-gray-700 border-2 border-gray-200'} font-semibold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center`}>
+                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                          </svg>
+                          Save
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

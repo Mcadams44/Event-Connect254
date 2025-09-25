@@ -74,13 +74,6 @@ const Browse = () => {
                          (prof.location && prof.location.toLowerCase().includes(searchTerm.toLowerCase())) ||
                          (prof.specialty && prof.specialty.toLowerCase().includes(searchTerm.toLowerCase()));
 
-    // Debug logging
-    if (selectedCategory === 'photography') {
-      console.log('Selected category:', selectedCategory);
-      console.log('Professional category:', prof.category);
-      console.log('Matches category:', matchesCategory);
-    }
-
     return matchesCategory && matchesSearch;
   });
 
@@ -199,18 +192,16 @@ const Browse = () => {
                       </svg>
                       Verified Pro
                     </div>
-                  </div>
-                </div>
-                <>
-                  {professional.portfolio && professional.portfolio.length > 1 && (
-                    <div className="absolute bottom-4 right-4 bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold border border-white/20 shadow-lg">
-                      +{professional.portfolio.length - 1} more
-                    </div>
                   )}
-                  <div className="absolute bottom-4 left-4 bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold border border-white/20 shadow-lg">
-                    ✨ {professional.specialty}
+                </div>
+                {professional.portfolio && professional.portfolio.length > 1 && (
+                  <div className="absolute bottom-4 right-4 bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold border border-white/20 shadow-lg">
+                    +{professional.portfolio.length - 1} more
                   </div>
-                </>
+                )}
+                <div className="absolute bottom-4 left-4 bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold border border-white/20 shadow-lg">
+                  ✨ {professional.specialty}
+                </div>
               </div>
 
               <div className="p-8 relative z-10">

@@ -3,6 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
+import os
+import uuid
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
@@ -37,6 +40,7 @@ class ProfessionalProfile(db.Model):
     phone = db.Column(db.String(20))
     bio = db.Column(db.Text)
     pricing = db.Column(db.String(100))
+    profile_image = db.Column(db.String(255), default='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face')
     setup_complete = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -204,7 +208,7 @@ def get_professionals():
                     'reviews': 25,
                     'verified': True,
                     'portfolio': [],
-                    'image': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face'
+                    'image': profile.profile_image or 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face'
                 })
     # Add sample professionals for all categories
     if len([r for r in result if r.get('verified')]) < 5:
@@ -262,6 +266,7 @@ def professional_profile():
         profile.phone = data.get('phone', profile.phone)
         profile.bio = data.get('bio', profile.bio)
         profile.pricing = data.get('pricing', profile.pricing)
+        profile.profile_image = data.get('profileImage', profile.profile_image)
         profile.setup_complete = data.get('setupComplete', profile.setup_complete)
     else:
         # Create new profile
@@ -273,6 +278,7 @@ def professional_profile():
             phone=data.get('phone'),
             bio=data['bio'],
             pricing=data.get('pricing'),
+            profile_image=data.get('profileImage'),
             setup_complete=data.get('setupComplete', False)
         )
         db.session.add(profile)

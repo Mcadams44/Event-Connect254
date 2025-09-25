@@ -6,80 +6,169 @@ const Browse = () => {
   const { isDark } = useTheme();
   const location = useLocation();
   const [searchTerm, setSearchTerm] = useState('');
+  const [professionals, setProfessionals] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProfessionals = async () => {
+      try {
+        const apiUrls = [
+          process.env.REACT_APP_API_URL,
+          process.env.REACT_APP_BACKUP_API_URL,
+          'http://localhost:5000'
+        ].filter(Boolean);
+
+        for (const apiUrl of apiUrls) {
+          try {
+            const response = await fetch(`${apiUrl}/api/professionals`);
+            if (response.ok) {
+              const data = await response.json();
+              setProfessionals(data);
+              setLoading(false);
+              return;
+            }
+          } catch (error) {
+            console.log(`Failed to connect to ${apiUrl}:`, error);
+            continue;
+          }
+        }
+        // If all APIs fail, set empty array
+        setProfessionals([]);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching professionals:', error);
+        setProfessionals([]);
+        setLoading(false);
+      }
+    };
+
+    fetchProfessionals();
+  }, []);
+>>>>>>> 611ce28 (add changes)
+  const [categories, setCategories] = useState([
+    { id: 'all', name: 'All Categories' },
+    { id: 'wedding', name: 'Wedding Planning' },
+    { id: 'corporate', name: 'Corporate Events' },
+    { id: 'party', name: 'Party Planning' },
+    { id: 'photography', name: 'Photographer' },
+    { id: 'catering', name: 'Catering' },
+    { id: 'entertainment', name: 'Entertainment' },
+    { id: 'venue', name: 'Venue Coordinators' },
+    { id: 'decoration', name: 'Event Decoration' },
+    { id: 'security', name: 'Security Services' }
+  ]);
+
+  useEffect(() => {
+    // Set category from URL parameter on initial load
+    const urlParams = new URLSearchParams(location.search);
+    const categoryParam = urlParams.get('category');
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+    }
+  }, [location.search]);
+=======
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [savedProfessionals, setSavedProfessionals] = useState([]);
-  const [professionals, setProfessionals] = useState([
-    // Wedding Planning
-    { id: 1, name: 'Grace Wanjiku', category: 'wedding', specialty: 'Wedding Planning & Coordination', location: 'Nairobi, Kenya', rating: 4.6, pricing: 'KSh250,000', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&crop=face', verified: true, email: 'grace@weddingplans.co.ke' },
-    { id: 2, name: 'Michael Ochieng', category: 'wedding', specialty: 'Luxury Wedding Planning', location: 'Mombasa, Kenya', rating: 4.5, pricing: 'KSh400,000', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face', verified: true, email: 'michael@luxuryweddings.ke' },
-    { id: 3, name: 'Sarah Muthoni', category: 'wedding', specialty: 'Traditional Wedding Specialist', location: 'Nakuru, Kenya', rating: 4.4, pricing: 'KSh180,000', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=face', verified: true, email: 'sarah@traditionweddings.ke' },
-    
-    // Corporate Events
-    { id: 8, name: 'Robert Kimani', category: 'corporate', specialty: 'Corporate Event Management', location: 'Nairobi, Kenya', rating: 4.5, pricing: 'KSh150,000', image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=face', verified: true, email: 'robert@corporateevents.ke' },
-    { id: 9, name: 'Jennifer Wanjiru', category: 'corporate', specialty: 'Conference & Seminar Planning', location: 'Nairobi, Kenya', rating: 4.6, pricing: 'KSh200,000', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop&crop=face', verified: true, email: 'jennifer@conferences.ke' },
-    
-    // Party Planning
-    { id: 14, name: 'Mary Wanjiku', category: 'party', specialty: 'Birthday Party Planning', location: 'Nairobi, Kenya', rating: 4.5, pricing: 'KSh65,000', image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face', verified: true, email: 'mary@birthdayparties.ke' },
-    { id: 15, name: 'Daniel Mwangi', category: 'party', specialty: 'Kids Party Specialist', location: 'Kiambu, Kenya', rating: 4.6, pricing: 'KSh45,000', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face', verified: true, email: 'daniel@kidsparties.ke' },
-    
-    // Photography
-    { id: 22, name: 'Sarah Johnson', category: 'photography', specialty: 'Wedding Photography', location: 'Nairobi, Kenya', rating: 4.6, pricing: 'KSh180,000', image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face', verified: true, email: 'sarah@weddingphotos.ke' },
-    { id: 23, name: 'James Mwangi', category: 'photography', specialty: 'Event Photography', location: 'Mombasa, Kenya', rating: 4.5, pricing: 'KSh120,000', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face', verified: true, email: 'james@eventphotos.ke' },
-    { id: 24, name: 'Linda Wanjiru', category: 'photography', specialty: 'Corporate Photography', location: 'Nairobi, Kenya', rating: 4.4, pricing: 'KSh95,000', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face', verified: true, email: 'linda@corporatephotos.ke' },
-    
-    // Catering
-    { id: 30, name: 'Joseph Kiprotich', category: 'catering', specialty: 'Traditional Kenyan Cuisine', location: 'Eldoret, Kenya', rating: 4.5, pricing: 'KSh2,800/person', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop&crop=face', verified: true, email: 'joseph@traditionalkenyancuisine.ke' },
-    
-    // Entertainment
-    { id: 37, name: 'DJ Mike Ochieng', category: 'entertainment', specialty: 'Wedding DJ Services', location: 'Nairobi, Kenya', rating: 4.5, pricing: 'KSh75,000', image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop&crop=face', verified: true, email: 'mike@weddingdj.ke' },
-    { id: 38, name: 'Stella Wanjiru', category: 'entertainment', specialty: 'Live Band Performance', location: 'Mombasa, Kenya', rating: 4.6, pricing: 'KSh120,000', image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&h=400&fit=crop&crop=face', verified: true, email: 'stella@liveband.ke' },
-    
-    // More Wedding Planning
-    { id: 4, name: 'David Kiprop', category: 'wedding', specialty: 'Destination Wedding Planner', location: 'Naivasha, Kenya', rating: 4.6, pricing: 'KSh350,000', image: 'https://images.unsplash.com/photo-1566492031773-4f4e44671d66?w=400&h=400&fit=crop&crop=face', verified: true, email: 'david@destinationweddings.ke' },
-    { id: 5, name: 'Lucy Akinyi', category: 'wedding', specialty: 'Budget Wedding Planning', location: 'Kisumu, Kenya', rating: 4.3, pricing: 'KSh120,000', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&crop=face', verified: true, email: 'lucy@budgetweddings.ke' },
-    
-    // More Corporate Events
-    { id: 10, name: 'Samuel Mutua', category: 'corporate', specialty: 'Product Launch Events', location: 'Mombasa, Kenya', rating: 4.4, pricing: 'KSh180,000', image: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?w=400&h=400&fit=crop&crop=face', verified: true, email: 'samuel@productlaunches.ke' },
-    { id: 11, name: 'Catherine Njeri', category: 'corporate', specialty: 'Team Building Events', location: 'Nakuru, Kenya', rating: 4.5, pricing: 'KSh120,000', image: 'https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=400&h=400&fit=crop&crop=face', verified: true, email: 'catherine@teambuilding.ke' },
-    { id: 12, name: 'John Kariuki', category: 'corporate', specialty: 'Executive Retreats', location: 'Naivasha, Kenya', rating: 4.6, pricing: 'KSh300,000', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'john@executiveretreats.ke' },
-    
-    // More Party Planning
-    { id: 16, name: 'Rose Achieng', category: 'party', specialty: 'Graduation Party Planner', location: 'Kisumu, Kenya', rating: 4.4, pricing: 'KSh55,000', image: 'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=400&h=400&fit=crop&crop=face', verified: true, email: 'rose@graduationparties.ke' },
-    { id: 17, name: 'Kevin Otieno', category: 'party', specialty: 'House Party Organizer', location: 'Mombasa, Kenya', rating: 4.3, pricing: 'KSh35,000', image: 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=400&h=400&fit=crop&crop=face', verified: true, email: 'kevin@houseparties.ke' },
-    { id: 18, name: 'Faith Nyambura', category: 'party', specialty: 'Anniversary Celebrations', location: 'Nakuru, Kenya', rating: 4.5, pricing: 'KSh75,000', image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=400&h=400&fit=crop&crop=face', verified: true, email: 'faith@anniversaries.ke' },
-    
-    // More Photography
-    { id: 25, name: 'Patrick Omondi', category: 'photography', specialty: 'Portrait Photography', location: 'Kisumu, Kenya', rating: 4.5, pricing: 'KSh65,000', image: 'https://images.unsplash.com/photo-1463453091185-61582044d556?w=400&h=400&fit=crop&crop=face', verified: true, email: 'patrick@portraits.ke' },
-    { id: 26, name: 'Nancy Chebet', category: 'photography', specialty: 'Fashion Photography', location: 'Nakuru, Kenya', rating: 4.6, pricing: 'KSh150,000', image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=400&fit=crop&crop=face', verified: true, email: 'nancy@fashionphotos.ke' },
-    { id: 27, name: 'George Kamau', category: 'photography', specialty: 'Product Photography', location: 'Thika, Kenya', rating: 4.3, pricing: 'KSh85,000', image: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&h=400&fit=crop&crop=face', verified: true, email: 'george@productphotos.ke' },
-    
-    // More Catering
-    { id: 31, name: 'Margaret Njoki', category: 'catering', specialty: 'Wedding Catering', location: 'Mombasa, Kenya', rating: 4.4, pricing: 'KSh4,200/person', image: 'https://images.unsplash.com/photo-1485893086445-ed75865251e0?w=400&h=400&fit=crop&crop=face', verified: true, email: 'margaret@weddingcatering.ke' },
-    { id: 32, name: 'Hassan Mohamed', category: 'catering', specialty: 'Halal Catering', location: 'Mombasa, Kenya', rating: 4.6, pricing: 'KSh3,500/person', image: 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'hassan@halalcatering.ke' },
-    { id: 33, name: 'Grace Moraa', category: 'catering', specialty: 'Corporate Catering', location: 'Kisumu, Kenya', rating: 4.3, pricing: 'KSh3,200/person', image: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&h=400&fit=crop&crop=face', verified: true, email: 'grace@corporatecatering.ke' },
-    
-    // More Entertainment
-    { id: 39, name: 'Collins Kiprop', category: 'entertainment', specialty: 'MC & Host Services', location: 'Eldoret, Kenya', rating: 4.4, pricing: 'KSh45,000', image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'collins@mcservices.ke' },
-    { id: 40, name: 'Mercy Akinyi', category: 'entertainment', specialty: 'Kids Entertainment', location: 'Kisumu, Kenya', rating: 4.5, pricing: 'KSh35,000', image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'mercy@kidsentertainment.ke' },
-    { id: 41, name: 'Victor Mutua', category: 'entertainment', specialty: 'Stand-up Comedy', location: 'Nairobi, Kenya', rating: 4.3, pricing: 'KSh55,000', image: 'https://images.unsplash.com/photo-1463453091185-61582044d556?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'victor@comedy.ke' },
-    
-    // Venue Coordinators
-    { id: 43, name: 'Andrew Mwangi', category: 'venue', specialty: 'Wedding Venue Coordination', location: 'Nairobi, Kenya', rating: 4.5, pricing: 'KSh85,000', image: 'https://images.unsplash.com/photo-1566492031773-4f4e44671d66?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'andrew@weddingvenues.ke' },
-    { id: 44, name: 'Caroline Njeri', category: 'venue', specialty: 'Corporate Venue Planning', location: 'Mombasa, Kenya', rating: 4.6, pricing: 'KSh120,000', image: 'https://images.unsplash.com/photo-1485893086445-ed75865251e0?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'caroline@corporatevenues.ke' },
-    { id: 45, name: 'Stephen Kiprotich', category: 'venue', specialty: 'Outdoor Event Venues', location: 'Nakuru, Kenya', rating: 4.4, pricing: 'KSh95,000', image: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'stephen@outdoorvenues.ke' },
-    
-    // Event Decoration
-    { id: 46, name: 'Diana Wanjiku', category: 'decoration', specialty: 'Wedding Decoration & Florals', location: 'Nairobi, Kenya', rating: 4.5, pricing: 'KSh65,000', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'diana@weddingdecor.ke' },
-    { id: 47, name: 'Grace Muthoni', category: 'decoration', specialty: 'Corporate Event Styling', location: 'Mombasa, Kenya', rating: 4.4, pricing: 'KSh55,000', image: 'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'grace@corporatedecor.ke' },
-    { id: 48, name: 'Peter Kamau', category: 'decoration', specialty: 'Party Balloon & Theme Decoration', location: 'Kisumu, Kenya', rating: 4.3, pricing: 'KSh35,000', image: 'https://images.unsplash.com/photo-1463453091185-61582044d556?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'peter@partydecor.ke' },
-    { id: 49, name: 'Esther Njeri', category: 'decoration', specialty: 'Luxury Event Design', location: 'Nakuru, Kenya', rating: 4.6, pricing: 'KSh85,000', image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'esther@luxurydecor.ke' },
-    
-    // Security Services
-    { id: 50, name: 'Captain Mwangi', category: 'security', specialty: 'Event Security Management', location: 'Nairobi, Kenya', rating: 4.6, pricing: 'KSh35,000', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'captain@eventsecurity.ke' },
-    { id: 51, name: 'Inspector Kiprotich', category: 'security', specialty: 'VIP Protection Services', location: 'Mombasa, Kenya', rating: 4.5, pricing: 'KSh45,000', image: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'inspector@vipsecurity.ke' },
-    { id: 52, name: 'Sergeant Otieno', category: 'security', specialty: 'Crowd Control & Safety', location: 'Eldoret, Kenya', rating: 4.4, pricing: 'KSh25,000', image: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'sergeant@crowdsecurity.ke' }
+  const [professionals, setProfessionals] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchProfessionals = async () => {
+      try {
+        const apiUrls = [
+          process.env.REACT_APP_API_URL,
+          process.env.REACT_APP_BACKUP_API_URL,
+          'http://localhost:5000'
+        ].filter(Boolean);
+
+        for (const apiUrl of apiUrls) {
+          try {
+            const response = await fetch(`${apiUrl}/api/professionals`);
+            if (response.ok) {
+              const data = await response.json();
+              setProfessionals(data);
+              setLoading(false);
+              return;
+            }
+          } catch (error) {
+            console.log(`Failed to connect to ${apiUrl}:`, error);
+            continue;
+          }
+        }
+        // If all APIs fail, set empty array
+        setProfessionals([]);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching professionals:', error);
+        setProfessionals([]);
+        setLoading(false);
+      }
+    };
+
+    fetchProfessionals();
+  }, []);
+
+  const [categories, setCategories] = useState([
+    { id: 'all', name: 'All Categories' },
+    { id: 'wedding', name: 'Wedding Planning' },
+    { id: 'corporate', name: 'Corporate Events' },
+    { id: 'party', name: 'Party Planning' },
+    { id: 'photography', name: 'Photographer' },
+    { id: 'catering', name: 'Catering' },
+    { id: 'entertainment', name: 'Entertainment' },
+    { id: 'venue', name: 'Venue Coordinators' },
+    { id: 'decoration', name: 'Event Decoration' },
+    { id: 'security', name: 'Security Services' }
   ]);
+
+  useEffect(() => {
+    // Set category from URL parameter on initial load
+    const urlParams = new URLSearchParams(location.search);
+    const categoryParam = urlParams.get('category');
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+    }
+  }, [location.search]);
+=======
+  const [professionals, setProfessionals] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProfessionals = async () => {
+      try {
+        const apiUrls = [
+          process.env.REACT_APP_API_URL,
+          process.env.REACT_APP_BACKUP_API_URL,
+          'http://localhost:5000'
+        ].filter(Boolean);
+
+        for (const apiUrl of apiUrls) {
+          try {
+            const response = await fetch(`${apiUrl}/api/professionals`);
+            if (response.ok) {
+              const data = await response.json();
+              setProfessionals(data);
+              setLoading(false);
+              return;
+            }
+          } catch (error) {
+            console.log(`Failed to connect to ${apiUrl}:`, error);
+            continue;
+          }
+        }
+        // If all APIs fail, set empty array
+        setProfessionals([]);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching professionals:', error);
+        setProfessionals([]);
+        setLoading(false);
+      }
+    };
+
+    fetchProfessionals();
+  }, []);
+>>>>>>> 611ce28 (add changes)
   const [categories, setCategories] = useState([
     { id: 'all', name: 'All Categories' },
     { id: 'wedding', name: 'Wedding Planning' },
@@ -208,8 +297,17 @@ const Browse = () => {
           </p>
         </div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="text-center py-16">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Loading professionals...</p>
+          </div>
+        )}
+
         {/* Professionals Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {!loading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProfessionals.map((professional, index) => (
             <div 
               key={professional.id} 
@@ -361,7 +459,8 @@ const Browse = () => {
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        )}
 
         {filteredProfessionals.length === 0 && (
           <div className="text-center py-16">

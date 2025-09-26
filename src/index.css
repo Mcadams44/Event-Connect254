@@ -30,11 +30,98 @@
     @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-blue-100 dark:border-gray-700;
   }
   
+  .hero-card {
+    @apply bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-2xl;
+  }
+  
+  .glass-effect {
+    @apply bg-white/20 backdrop-blur-sm border border-white/30;
+  }
+  
   .section-bg {
     @apply bg-gradient-to-br from-blue-50/50 to-white dark:from-gray-900/50 dark:to-gray-800;
   }
   
   .section-bg-alt {
     @apply bg-gradient-to-br from-white to-blue-50/30 dark:from-gray-800 dark:to-gray-900/30;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in-up {
+    animation: fadeInUp 1s ease-out;
+  }
+  
+  .animate-gradient-x {
+    animation: gradient-x 3s ease infinite;
+    background-size: 200% 200%;
+  }
+  
+  .animate-slideshow {
+    animation: slideshow 1s ease-in-out;
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite alternate;
+  }
+  
+  .parallax-bg {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes gradient-x {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  
+  @keyframes slideshow {
+    from {
+      opacity: 0;
+      transform: scale(1.1);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+  
+  @keyframes pulseGlow {
+    from {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    }
+    to {
+      box-shadow: 0 0 40px rgba(59, 130, 246, 0.8), 0 0 60px rgba(59, 130, 246, 0.4);
+    }
   }
 }

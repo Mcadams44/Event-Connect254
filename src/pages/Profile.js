@@ -7,6 +7,7 @@ const Profile = () => {
   const { user, updateProfile } = useAuth();
   const { isDark } = useTheme();
   const [isEditing, setIsEditing] = useState(false);
+  const [profileImage, setProfileImage] = useState(user?.profileImage || null);
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -18,8 +19,19 @@ const Profile = () => {
   });
 
   const handleSave = () => {
-    updateProfile(formData);
+    updateProfile({...formData, profileImage});
     setIsEditing(false);
+  };
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setProfileImage(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const addPortfolioItem = () => {
@@ -98,20 +110,34 @@ const Profile = () => {
               <div className="flex flex-col items-center text-center mb-8">
                 {/* Enhanced Profile Picture */}
                 <div className="relative mb-6">
-                  <div className="w-32 h-32 bg-gradient-to-br from-white/20 to-white/10 rounded-full flex items-center justify-center text-5xl font-bold backdrop-blur-sm border-4 border-white/30 shadow-2xl">
-                    {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                  <div className="w-32 h-32 bg-gradient-to-br from-white/20 to-white/10 rounded-full flex items-center justify-center text-5xl font-bold backdrop-blur-sm border-4 border-white/30 shadow-2xl overflow-hidden">
+                    {profileImage ? (
+                      <img 
+                        src={profileImage} 
+                        alt="Profile" 
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      user?.name?.charAt(0)?.toUpperCase() || 'U'
+                    )}
                   </div>
                   <div className="absolute -bottom-2 -right-2 bg-gradient-to-r from-green-400 to-emerald-500 w-10 h-10 rounded-full flex items-center justify-center shadow-lg animate-bounce">
                     <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <button className="absolute -top-2 -right-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300">
+                  <label className="absolute -top-2 -right-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer hover:scale-110">
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
                     <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
-                  </button>
+                  </label>
                 </div>
                 
                 <div className="mb-6">

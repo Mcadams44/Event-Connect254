@@ -8,71 +8,79 @@ const Browse = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  const [professionals, setProfessionals] = useState([]);
-  const [loading, setLoading] = useState(true);
-
   const [professionals, setProfessionals] = useState([
     // Wedding Planning
-    { id: 1, name: 'Grace Wanjiku', category: 'wedding', specialty: 'Wedding Planning & Coordination', location: 'Nairobi, Kenya', rating: 4.9, pricing: 'KSh250,000', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&crop=face', verified: true, email: 'grace@weddingplans.co.ke' },
-    { id: 2, name: 'Michael Ochieng', category: 'wedding', specialty: 'Luxury Wedding Planning', location: 'Mombasa, Kenya', rating: 4.8, pricing: 'KSh400,000', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face', verified: true, email: 'michael@luxuryweddings.ke' },
-    { id: 3, name: 'Sarah Muthoni', category: 'wedding', specialty: 'Traditional Wedding Specialist', location: 'Nakuru, Kenya', rating: 4.7, pricing: 'KSh180,000', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=face', verified: true, email: 'sarah@traditionweddings.ke' },
+    { id: 1, name: 'Grace Wanjiku', category: 'wedding', specialty: 'Wedding Planning & Coordination', location: 'Nairobi, Kenya', rating: 4.6, pricing: 'KSh250,000', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&crop=face', verified: true, email: 'grace@weddingplans.co.ke' },
+    { id: 2, name: 'Michael Ochieng', category: 'wedding', specialty: 'Luxury Wedding Planning', location: 'Mombasa, Kenya', rating: 4.5, pricing: 'KSh400,000', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face', verified: true, email: 'michael@luxuryweddings.ke' },
+    { id: 3, name: 'Sarah Muthoni', category: 'wedding', specialty: 'Traditional Wedding Specialist', location: 'Nakuru, Kenya', rating: 4.4, pricing: 'KSh180,000', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=face', verified: true, email: 'sarah@traditionweddings.ke' },
     
     // Corporate Events
-    { id: 8, name: 'Robert Kimani', category: 'corporate', specialty: 'Corporate Event Management', location: 'Nairobi, Kenya', rating: 4.8, pricing: 'KSh150,000', image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=face', verified: true, email: 'robert@corporateevents.ke' },
-    { id: 9, name: 'Jennifer Wanjiru', category: 'corporate', specialty: 'Conference & Seminar Planning', location: 'Nairobi, Kenya', rating: 4.9, pricing: 'KSh200,000', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop&crop=face', verified: true, email: 'jennifer@conferences.ke' },
+    { id: 8, name: 'Robert Kimani', category: 'corporate', specialty: 'Corporate Event Management', location: 'Nairobi, Kenya', rating: 4.5, pricing: 'KSh150,000', image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=face', verified: true, email: 'robert@corporateevents.ke' },
+    { id: 9, name: 'Jennifer Wanjiru', category: 'corporate', specialty: 'Conference & Seminar Planning', location: 'Nairobi, Kenya', rating: 4.6, pricing: 'KSh200,000', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop&crop=face', verified: true, email: 'jennifer@conferences.ke' },
     
     // Party Planning
-    { id: 14, name: 'Mary Wanjiku', category: 'party', specialty: 'Birthday Party Planning', location: 'Nairobi, Kenya', rating: 4.8, pricing: 'KSh65,000', image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face', verified: true, email: 'mary@birthdayparties.ke' },
-    { id: 15, name: 'Daniel Mwangi', category: 'party', specialty: 'Kids Party Specialist', location: 'Kiambu, Kenya', rating: 4.9, pricing: 'KSh45,000', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face', verified: true, email: 'daniel@kidsparties.ke' },
+    { id: 14, name: 'Mary Wanjiku', category: 'party', specialty: 'Birthday Party Planning', location: 'Nairobi, Kenya', rating: 4.5, pricing: 'KSh65,000', image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face', verified: true, email: 'mary@birthdayparties.ke' },
+    { id: 15, name: 'Daniel Mwangi', category: 'party', specialty: 'Kids Party Specialist', location: 'Kiambu, Kenya', rating: 4.6, pricing: 'KSh45,000', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face', verified: true, email: 'daniel@kidsparties.ke' },
     
     // Photography
-    { id: 22, name: 'Sarah Johnson', category: 'photography', specialty: 'Wedding Photography', location: 'Nairobi, Kenya', rating: 4.9, pricing: 'KSh180,000', image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face', verified: true, email: 'sarah@weddingphotos.ke' },
-    { id: 23, name: 'James Mwangi', category: 'photography', specialty: 'Event Photography', location: 'Mombasa, Kenya', rating: 4.8, pricing: 'KSh120,000', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face', verified: true, email: 'james@eventphotos.ke' },
-    { id: 24, name: 'Linda Wanjiru', category: 'photography', specialty: 'Corporate Photography', location: 'Nairobi, Kenya', rating: 4.7, pricing: 'KSh95,000', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face', verified: true, email: 'linda@corporatephotos.ke' },
+    { id: 22, name: 'Sarah Johnson', category: 'photography', specialty: 'Wedding Photography', location: 'Nairobi, Kenya', rating: 4.6, pricing: 'KSh180,000', image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face', verified: true, email: 'sarah@weddingphotos.ke' },
+    { id: 23, name: 'James Mwangi', category: 'photography', specialty: 'Event Photography', location: 'Mombasa, Kenya', rating: 4.5, pricing: 'KSh120,000', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face', verified: true, email: 'james@eventphotos.ke' },
+    { id: 24, name: 'Linda Wanjiru', category: 'photography', specialty: 'Corporate Photography', location: 'Nairobi, Kenya', rating: 4.4, pricing: 'KSh95,000', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face', verified: true, email: 'linda@corporatephotos.ke' },
     
     // Catering
-    { id: 30, name: 'Joseph Kiprotich', category: 'catering', specialty: 'Traditional Kenyan Cuisine', location: 'Eldoret, Kenya', rating: 4.8, pricing: 'KSh2,800/person', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop&crop=face', verified: true, email: 'joseph@traditionalkenyancuisine.ke' },
+    { id: 30, name: 'Joseph Kiprotich', category: 'catering', specialty: 'Traditional Kenyan Cuisine', location: 'Eldoret, Kenya', rating: 4.5, pricing: 'KSh2,800/person', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop&crop=face', verified: true, email: 'joseph@traditionalkenyancuisine.ke' },
     
     // Entertainment
-    { id: 37, name: 'DJ Mike Ochieng', category: 'entertainment', specialty: 'Wedding DJ Services', location: 'Nairobi, Kenya', rating: 4.8, pricing: 'KSh75,000', image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop&crop=face', verified: true, email: 'mike@weddingdj.ke' },
-    { id: 38, name: 'Stella Wanjiru', category: 'entertainment', specialty: 'Live Band Performance', location: 'Mombasa, Kenya', rating: 4.9, pricing: 'KSh120,000', image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&h=400&fit=crop&crop=face', verified: true, email: 'stella@liveband.ke' },
+    { id: 37, name: 'DJ Mike Ochieng', category: 'entertainment', specialty: 'Wedding DJ Services', location: 'Nairobi, Kenya', rating: 4.5, pricing: 'KSh75,000', image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop&crop=face', verified: true, email: 'mike@weddingdj.ke' },
+    { id: 38, name: 'Stella Wanjiru', category: 'entertainment', specialty: 'Live Band Performance', location: 'Mombasa, Kenya', rating: 4.6, pricing: 'KSh120,000', image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&h=400&fit=crop&crop=face', verified: true, email: 'stella@liveband.ke' },
     
     // More Wedding Planning
-    { id: 4, name: 'David Kiprop', category: 'wedding', specialty: 'Destination Wedding Planner', location: 'Naivasha, Kenya', rating: 4.9, pricing: 'KSh350,000', image: 'https://images.unsplash.com/photo-1566492031773-4f4e44671d66?w=400&h=400&fit=crop&crop=face', verified: true, email: 'david@destinationweddings.ke' },
-    { id: 5, name: 'Lucy Akinyi', category: 'wedding', specialty: 'Budget Wedding Planning', location: 'Kisumu, Kenya', rating: 4.6, pricing: 'KSh120,000', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&crop=face', verified: true, email: 'lucy@budgetweddings.ke' },
+    { id: 4, name: 'David Kiprop', category: 'wedding', specialty: 'Destination Wedding Planner', location: 'Naivasha, Kenya', rating: 4.6, pricing: 'KSh350,000', image: 'https://images.unsplash.com/photo-1566492031773-4f4e44671d66?w=400&h=400&fit=crop&crop=face', verified: true, email: 'david@destinationweddings.ke' },
+    { id: 5, name: 'Lucy Akinyi', category: 'wedding', specialty: 'Budget Wedding Planning', location: 'Kisumu, Kenya', rating: 4.3, pricing: 'KSh120,000', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&crop=face', verified: true, email: 'lucy@budgetweddings.ke' },
     
     // More Corporate Events
-    { id: 10, name: 'Samuel Mutua', category: 'corporate', specialty: 'Product Launch Events', location: 'Mombasa, Kenya', rating: 4.7, pricing: 'KSh180,000', image: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?w=400&h=400&fit=crop&crop=face', verified: true, email: 'samuel@productlaunches.ke' },
-    { id: 11, name: 'Catherine Njeri', category: 'corporate', specialty: 'Team Building Events', location: 'Nakuru, Kenya', rating: 4.8, pricing: 'KSh120,000', image: 'https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=400&h=400&fit=crop&crop=face', verified: true, email: 'catherine@teambuilding.ke' },
-    { id: 12, name: 'John Kariuki', category: 'corporate', specialty: 'Executive Retreats', location: 'Naivasha, Kenya', rating: 4.9, pricing: 'KSh300,000', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'john@executiveretreats.ke' },
+    { id: 10, name: 'Samuel Mutua', category: 'corporate', specialty: 'Product Launch Events', location: 'Mombasa, Kenya', rating: 4.4, pricing: 'KSh180,000', image: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?w=400&h=400&fit=crop&crop=face', verified: true, email: 'samuel@productlaunches.ke' },
+    { id: 11, name: 'Catherine Njeri', category: 'corporate', specialty: 'Team Building Events', location: 'Nakuru, Kenya', rating: 4.5, pricing: 'KSh120,000', image: 'https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=400&h=400&fit=crop&crop=face', verified: true, email: 'catherine@teambuilding.ke' },
+    { id: 12, name: 'John Kariuki', category: 'corporate', specialty: 'Executive Retreats', location: 'Naivasha, Kenya', rating: 4.6, pricing: 'KSh300,000', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'john@executiveretreats.ke' },
     
     // More Party Planning
-    { id: 16, name: 'Rose Achieng', category: 'party', specialty: 'Graduation Party Planner', location: 'Kisumu, Kenya', rating: 4.7, pricing: 'KSh55,000', image: 'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=400&h=400&fit=crop&crop=face', verified: true, email: 'rose@graduationparties.ke' },
-    { id: 17, name: 'Kevin Otieno', category: 'party', specialty: 'House Party Organizer', location: 'Mombasa, Kenya', rating: 4.6, pricing: 'KSh35,000', image: 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=400&h=400&fit=crop&crop=face', verified: true, email: 'kevin@houseparties.ke' },
-    { id: 18, name: 'Faith Nyambura', category: 'party', specialty: 'Anniversary Celebrations', location: 'Nakuru, Kenya', rating: 4.8, pricing: 'KSh75,000', image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=400&h=400&fit=crop&crop=face', verified: true, email: 'faith@anniversaries.ke' },
+    { id: 16, name: 'Rose Achieng', category: 'party', specialty: 'Graduation Party Planner', location: 'Kisumu, Kenya', rating: 4.4, pricing: 'KSh55,000', image: 'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=400&h=400&fit=crop&crop=face', verified: true, email: 'rose@graduationparties.ke' },
+    { id: 17, name: 'Kevin Otieno', category: 'party', specialty: 'House Party Organizer', location: 'Mombasa, Kenya', rating: 4.3, pricing: 'KSh35,000', image: 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=400&h=400&fit=crop&crop=face', verified: true, email: 'kevin@houseparties.ke' },
+    { id: 18, name: 'Faith Nyambura', category: 'party', specialty: 'Anniversary Celebrations', location: 'Nakuru, Kenya', rating: 4.5, pricing: 'KSh75,000', image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=400&h=400&fit=crop&crop=face', verified: true, email: 'faith@anniversaries.ke' },
     
     // More Photography
-    { id: 25, name: 'Patrick Omondi', category: 'photography', specialty: 'Portrait Photography', location: 'Kisumu, Kenya', rating: 4.8, pricing: 'KSh65,000', image: 'https://images.unsplash.com/photo-1463453091185-61582044d556?w=400&h=400&fit=crop&crop=face', verified: true, email: 'patrick@portraits.ke' },
-    { id: 26, name: 'Nancy Chebet', category: 'photography', specialty: 'Fashion Photography', location: 'Nakuru, Kenya', rating: 4.9, pricing: 'KSh150,000', image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=400&fit=crop&crop=face', verified: true, email: 'nancy@fashionphotos.ke' },
-    { id: 27, name: 'George Kamau', category: 'photography', specialty: 'Product Photography', location: 'Thika, Kenya', rating: 4.6, pricing: 'KSh85,000', image: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&h=400&fit=crop&crop=face', verified: true, email: 'george@productphotos.ke' },
+    { id: 25, name: 'Patrick Omondi', category: 'photography', specialty: 'Portrait Photography', location: 'Kisumu, Kenya', rating: 4.5, pricing: 'KSh65,000', image: 'https://images.unsplash.com/photo-1463453091185-61582044d556?w=400&h=400&fit=crop&crop=face', verified: true, email: 'patrick@portraits.ke' },
+    { id: 26, name: 'Nancy Chebet', category: 'photography', specialty: 'Fashion Photography', location: 'Nakuru, Kenya', rating: 4.6, pricing: 'KSh150,000', image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=400&fit=crop&crop=face', verified: true, email: 'nancy@fashionphotos.ke' },
+    { id: 27, name: 'George Kamau', category: 'photography', specialty: 'Product Photography', location: 'Thika, Kenya', rating: 4.3, pricing: 'KSh85,000', image: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&h=400&fit=crop&crop=face', verified: true, email: 'george@productphotos.ke' },
     
     // More Catering
-    { id: 31, name: 'Margaret Njoki', category: 'catering', specialty: 'Wedding Catering', location: 'Mombasa, Kenya', rating: 4.7, pricing: 'KSh4,200/person', image: 'https://images.unsplash.com/photo-1485893086445-ed75865251e0?w=400&h=400&fit=crop&crop=face', verified: true, email: 'margaret@weddingcatering.ke' },
-    { id: 32, name: 'Hassan Mohamed', category: 'catering', specialty: 'Halal Catering', location: 'Mombasa, Kenya', rating: 4.9, pricing: 'KSh3,500/person', image: 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'hassan@halalcatering.ke' },
-    { id: 33, name: 'Grace Moraa', category: 'catering', specialty: 'Corporate Catering', location: 'Kisumu, Kenya', rating: 4.6, pricing: 'KSh3,200/person', image: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&h=400&fit=crop&crop=face', verified: true, email: 'grace@corporatecatering.ke' },
+    { id: 31, name: 'Margaret Njoki', category: 'catering', specialty: 'Wedding Catering', location: 'Mombasa, Kenya', rating: 4.4, pricing: 'KSh4,200/person', image: 'https://images.unsplash.com/photo-1485893086445-ed75865251e0?w=400&h=400&fit=crop&crop=face', verified: true, email: 'margaret@weddingcatering.ke' },
+    { id: 32, name: 'Hassan Mohamed', category: 'catering', specialty: 'Halal Catering', location: 'Mombasa, Kenya', rating: 4.6, pricing: 'KSh3,500/person', image: 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'hassan@halalcatering.ke' },
+    { id: 33, name: 'Grace Moraa', category: 'catering', specialty: 'Corporate Catering', location: 'Kisumu, Kenya', rating: 4.3, pricing: 'KSh3,200/person', image: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&h=400&fit=crop&crop=face', verified: true, email: 'grace@corporatecatering.ke' },
     
     // More Entertainment
-    { id: 39, name: 'Collins Kiprop', category: 'entertainment', specialty: 'MC & Host Services', location: 'Eldoret, Kenya', rating: 4.7, pricing: 'KSh45,000', image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'collins@mcservices.ke' },
-    { id: 40, name: 'Mercy Akinyi', category: 'entertainment', specialty: 'Kids Entertainment', location: 'Kisumu, Kenya', rating: 4.8, pricing: 'KSh35,000', image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'mercy@kidsentertainment.ke' },
-    { id: 41, name: 'Victor Mutua', category: 'entertainment', specialty: 'Stand-up Comedy', location: 'Nairobi, Kenya', rating: 4.6, pricing: 'KSh55,000', image: 'https://images.unsplash.com/photo-1463453091185-61582044d556?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'victor@comedy.ke' },
+    { id: 39, name: 'Collins Kiprop', category: 'entertainment', specialty: 'MC & Host Services', location: 'Eldoret, Kenya', rating: 4.4, pricing: 'KSh45,000', image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'collins@mcservices.ke' },
+    { id: 40, name: 'Mercy Akinyi', category: 'entertainment', specialty: 'Kids Entertainment', location: 'Kisumu, Kenya', rating: 4.5, pricing: 'KSh35,000', image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'mercy@kidsentertainment.ke' },
+    { id: 41, name: 'Victor Mutua', category: 'entertainment', specialty: 'Stand-up Comedy', location: 'Nairobi, Kenya', rating: 4.3, pricing: 'KSh55,000', image: 'https://images.unsplash.com/photo-1463453091185-61582044d556?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'victor@comedy.ke' },
     
     // Venue Coordinators
-    { id: 43, name: 'Andrew Mwangi', category: 'venue', specialty: 'Wedding Venue Coordination', location: 'Nairobi, Kenya', rating: 4.8, pricing: 'KSh85,000', image: 'https://images.unsplash.com/photo-1566492031773-4f4e44671d66?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'andrew@weddingvenues.ke' },
-    { id: 44, name: 'Caroline Njeri', category: 'venue', specialty: 'Corporate Venue Planning', location: 'Mombasa, Kenya', rating: 4.9, pricing: 'KSh120,000', image: 'https://images.unsplash.com/photo-1485893086445-ed75865251e0?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'caroline@corporatevenues.ke' },
-    { id: 45, name: 'Stephen Kiprotich', category: 'venue', specialty: 'Outdoor Event Venues', location: 'Nakuru, Kenya', rating: 4.7, pricing: 'KSh95,000', image: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'stephen@outdoorvenues.ke' }
-
+    { id: 43, name: 'Andrew Mwangi', category: 'venue', specialty: 'Wedding Venue Coordination', location: 'Nairobi, Kenya', rating: 4.5, pricing: 'KSh85,000', image: 'https://images.unsplash.com/photo-1566492031773-4f4e44671d66?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'andrew@weddingvenues.ke' },
+    { id: 44, name: 'Caroline Njeri', category: 'venue', specialty: 'Corporate Venue Planning', location: 'Mombasa, Kenya', rating: 4.6, pricing: 'KSh120,000', image: 'https://images.unsplash.com/photo-1485893086445-ed75865251e0?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'caroline@corporatevenues.ke' },
+    { id: 45, name: 'Stephen Kiprotich', category: 'venue', specialty: 'Outdoor Event Venues', location: 'Nakuru, Kenya', rating: 4.4, pricing: 'KSh95,000', image: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'stephen@outdoorvenues.ke' },
+    
+    // Event Decoration
+    { id: 46, name: 'Diana Wanjiku', category: 'decoration', specialty: 'Wedding Decoration & Florals', location: 'Nairobi, Kenya', rating: 4.5, pricing: 'KSh65,000', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'diana@weddingdecor.ke' },
+    { id: 47, name: 'Grace Muthoni', category: 'decoration', specialty: 'Corporate Event Styling', location: 'Mombasa, Kenya', rating: 4.4, pricing: 'KSh55,000', image: 'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'grace@corporatedecor.ke' },
+    { id: 48, name: 'Peter Kamau', category: 'decoration', specialty: 'Party Balloon & Theme Decoration', location: 'Kisumu, Kenya', rating: 4.3, pricing: 'KSh35,000', image: 'https://images.unsplash.com/photo-1463453091185-61582044d556?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'peter@partydecor.ke' },
+    { id: 49, name: 'Esther Njeri', category: 'decoration', specialty: 'Luxury Event Design', location: 'Nakuru, Kenya', rating: 4.6, pricing: 'KSh85,000', image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'esther@luxurydecor.ke' },
+    
+    // Security Services
+    { id: 50, name: 'Captain Mwangi', category: 'security', specialty: 'Event Security Management', location: 'Nairobi, Kenya', rating: 4.6, pricing: 'KSh35,000', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'captain@eventsecurity.ke' },
+    { id: 51, name: 'Inspector Kiprotich', category: 'security', specialty: 'VIP Protection Services', location: 'Mombasa, Kenya', rating: 4.5, pricing: 'KSh45,000', image: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'inspector@vipsecurity.ke' },
+    { id: 52, name: 'Sergeant Otieno', category: 'security', specialty: 'Crowd Control & Safety', location: 'Eldoret, Kenya', rating: 4.4, pricing: 'KSh25,000', image: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'sergeant@crowdsecurity.ke' }
   ]);
-
+  const [loading, setLoading] = useState(true);
+  const [savedProfessionals, setSavedProfessionals] = useState([]);
   const [categories, setCategories] = useState([
     { id: 'all', name: 'All Categories' },
     { id: 'wedding', name: 'Wedding Planning' },
@@ -81,7 +89,9 @@ const Browse = () => {
     { id: 'photography', name: 'Photographer' },
     { id: 'catering', name: 'Catering' },
     { id: 'entertainment', name: 'Entertainment' },
-    { id: 'venue', name: 'Venue Coordinators' }
+    { id: 'venue', name: 'Venue Coordinators' },
+    { id: 'decoration', name: 'Event Decoration' },
+    { id: 'security', name: 'Security Services' }
   ]);
 
   useEffect(() => {
@@ -145,6 +155,16 @@ const Browse = () => {
 
     return matchesCategory && matchesSearch;
   });
+
+  const handleSaveProfessional = (professionalId) => {
+    setSavedProfessionals(prev => {
+      if (prev.includes(professionalId)) {
+        return prev.filter(id => id !== professionalId);
+      } else {
+        return [...prev, professionalId];
+      }
+    });
+  };
 
   return (
     <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-gray-50'} py-8 transition-colors duration-300`}>
@@ -260,41 +280,20 @@ const Browse = () => {
                         <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
                       Verified Pro
-   
-              <div className="relative">
-                <div className="relative overflow-hidden">
-                  <img
-                    src={professional.image}
-                    alt={professional.name}
-                    className="w-full h-72 object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  {/* Enhanced Badges */}
-                  <div className="absolute top-4 right-4 flex flex-col gap-2">
-                    {professional.verified && (
-                      <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-2 rounded-full text-xs font-bold flex items-center shadow-lg backdrop-blur-sm border border-white/20">
-                        <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                        Verified Pro
-                      </div>
-                    )}
-                    <div className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg backdrop-blur-sm border border-white/20">
-                      ⭐ Top Rated
-
-                    </div>
-                  </div>
-                </div>
-                <>
-                  {professional.portfolio && professional.portfolio.length > 1 && (
-                    <div className="absolute bottom-4 right-4 bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold border border-white/20 shadow-lg">
-                      +{professional.portfolio.length - 1} more
                     </div>
                   )}
-                  <div className="absolute bottom-4 left-4 bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold border border-white/20 shadow-lg">
-                    ✨ {professional.specialty}
+                  <div className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg backdrop-blur-sm border border-white/20">
+                    ⭐ Top Rated
                   </div>
-                </>
+                </div>
+                {professional.portfolio && professional.portfolio.length > 1 && (
+                  <div className="absolute bottom-4 right-4 bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold border border-white/20 shadow-lg">
+                    +{professional.portfolio.length - 1} more
+                  </div>
+                )}
+                <div className="absolute bottom-4 left-4 bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold border border-white/20 shadow-lg">
+                  ✨ {professional.specialty}
+                </div>
               </div>
 
               <div className="p-8 relative z-10">
@@ -355,17 +354,17 @@ const Browse = () => {
                         ))}
                       </div>
                       <span className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        {professional.rating || '4.5'}
+                        {professional.rating}
                       </span>
                     </div>
                     <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'} font-medium`}>
-                      ({professional.reviews || '12'} reviews)
+                      ({Math.floor(professional.rating * 10 + 15)} reviews)
                     </span>
                   </div>
                   <div className="mt-2 bg-yellow-200 rounded-full h-2">
                     <div
                       className="bg-gradient-to-r from-yellow-400 to-orange-500 h-2 rounded-full transition-all duration-500"
-                      style={{ width: `${((professional.rating || 4.5) / 5) * 100}%` }}
+                      style={{ width: `${(professional.rating / 5) * 100}%` }}
                     ></div>
                   </div>
                 </div>
@@ -373,7 +372,7 @@ const Browse = () => {
                 {/* Enhanced Action Buttons */}
                 <div className="flex flex-col gap-3">
                   <a
-                    href={`mailto:${professional.email}`}
+                    href={`mailto:${professional.email}?subject=Event Inquiry - ${professional.specialty}&body=Hi ${professional.name},%0D%0A%0D%0AI'm interested in your ${professional.specialty.toLowerCase()} services for my upcoming event.%0D%0A%0D%0APlease let me know your availability and we can discuss the details.%0D%0A%0D%0AThank you!`}
                     className={`${isDark ? 'bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700' : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'} text-white py-3 px-6 rounded-xl font-bold transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg flex items-center justify-center group`}
                   >
                     <svg className="w-5 h-5 mr-2 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -383,7 +382,7 @@ const Browse = () => {
                   </a>
                   <div className="flex gap-2">
                     <a
-                      href={`tel:${professional.phone || ''}`}
+                      href={`tel:+254${Math.floor(Math.random() * 900000000) + 700000000}`}
                       className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-xl font-semibold transition-all duration-300 text-center transform hover:scale-105 flex items-center justify-center"
                     >
                       <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -391,11 +390,17 @@ const Browse = () => {
                       </svg>
                       Call
                     </a>
-                    <button className={`flex-1 ${isDark ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'} py-2 px-4 rounded-xl font-semibold transition-all duration-300 text-center transform hover:scale-105 flex items-center justify-center`}>
-                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button 
+                      onClick={() => handleSaveProfessional(professional.id)}
+                      className={`flex-1 ${savedProfessionals.includes(professional.id) 
+                        ? 'bg-red-500 hover:bg-red-600 text-white' 
+                        : isDark ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                      } py-2 px-4 rounded-xl font-semibold transition-all duration-300 text-center transform hover:scale-105 flex items-center justify-center`}
+                    >
+                      <svg className="w-4 h-4 mr-1" fill={savedProfessionals.includes(professional.id) ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                       </svg>
-                      Save
+                      {savedProfessionals.includes(professional.id) ? 'Saved' : 'Save'}
                     </button>
                   </div>
                 </div>

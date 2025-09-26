@@ -11,8 +11,7 @@ const Browse = () => {
   const [professionals, setProfessionals] = useState([]);
   const [loading, setLoading] = useState(true);
 
-
-const [professionals, setProfessionals] = useState([
+  const [professionals, setProfessionals] = useState([
     // Wedding Planning
     { id: 1, name: 'Grace Wanjiku', category: 'wedding', specialty: 'Wedding Planning & Coordination', location: 'Nairobi, Kenya', rating: 4.9, pricing: 'KSh250,000', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&crop=face', verified: true, email: 'grace@weddingplans.co.ke' },
     { id: 2, name: 'Michael Ochieng', category: 'wedding', specialty: 'Luxury Wedding Planning', location: 'Mombasa, Kenya', rating: 4.8, pricing: 'KSh400,000', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face', verified: true, email: 'michael@luxuryweddings.ke' },
@@ -73,6 +72,7 @@ const [professionals, setProfessionals] = useState([
     { id: 45, name: 'Stephen Kiprotich', category: 'venue', specialty: 'Outdoor Event Venues', location: 'Nakuru, Kenya', rating: 4.7, pricing: 'KSh95,000', image: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&h=400&fit=crop&crop=face&auto=format&q=80', verified: true, email: 'stephen@outdoorvenues.ke' }
 
   ]);
+
   const [categories, setCategories] = useState([
     { id: 'all', name: 'All Categories' },
     { id: 'wedding', name: 'Wedding Planning' },
@@ -254,7 +254,7 @@ const [professionals, setProfessionals] = useState([
                 <div className="absolute bottom-0 left-0 w-16 h-16 bg-purple-500 rounded-full translate-y-8 -translate-x-8"></div>
               </div>
 
- <div className="relative overflow-hidden">
+              <div className="relative overflow-hidden">
                 <img
                   src={professional.portfolio && professional.portfolio.length > 0 ? `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${professional.portfolio[0].image_url}` : professional.image}
                   alt={professional.name}
@@ -272,8 +272,7 @@ const [professionals, setProfessionals] = useState([
                         <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
                       Verified Pro
-=======
-              
+   
               <div className="relative">
                 <div className="relative overflow-hidden">
                   <img
@@ -295,24 +294,6 @@ const [professionals, setProfessionals] = useState([
                     <div className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg backdrop-blur-sm border border-white/20">
                       ⭐ Top Rated
 
-              <div className="relative overflow-hidden">
-                <img
-                  src={professional.portfolio && professional.portfolio.length > 0 ? `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${professional.portfolio[0].image_url}` : professional.image}
-                  alt={professional.name}
-                  className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-110"
-                  onError={(e) => {
-                    e.target.src = professional.image;
-                  }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                {/* Enhanced Badges */}
-                <div className="absolute top-4 right-4 flex flex-col gap-2">
-                  {professional.verified && (
-                    <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-2 rounded-full text-xs font-bold flex items-center shadow-lg backdrop-blur-sm border border-white/20">
-                      <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      Verified Pro
                     </div>
                   )}
                   <div className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg backdrop-blur-sm border border-white/20">

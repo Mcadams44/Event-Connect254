@@ -329,6 +329,17 @@ def professional_profile():
 
     db.session.commit()
 
+    # Handle profile photo upload
+    if 'profilePhoto' in request.files:
+        file = request.files['profilePhoto']
+        if file and file.filename and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            unique_filename = f"{timestamp}_{filename}"
+            filepath = os.path.join(UPLOAD_FOLDER, unique_filename)
+            file.save(filepath)
+            profile.profile_image = f'/static/uploads/{unique_filename}'
+
     # Handle portfolio uploads (only if files present)
     if 'portfolio_images' in request.files:
         files = request.files.getlist('portfolio_images')

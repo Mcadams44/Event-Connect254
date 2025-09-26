@@ -4,6 +4,7 @@ import { useTheme } from '../context/ThemeContext';
 const FeaturedProfessionals = ({ categoryFilter = 'all' }) => {
   const [selectedProfessional, setSelectedProfessional] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [savedProfessionals, setSavedProfessionals] = useState([]);
   
   const allProfessionals = [
     {
@@ -246,6 +247,16 @@ const FeaturedProfessionals = ({ categoryFilter = 'all' }) => {
     return () => clearInterval(timer);
   }, [professionals.length]);
 
+  const handleSaveProfessional = (professionalId) => {
+    setSavedProfessionals(prev => {
+      if (prev.includes(professionalId)) {
+        return prev.filter(id => id !== professionalId);
+      } else {
+        return [...prev, professionalId];
+      }
+    });
+  };
+
   return (
     <section className={`py-20 ${isDark ? 'bg-gradient-to-br from-gray-800 to-gray-900' : 'bg-gradient-to-br from-blue-50 to-indigo-100'} transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -371,11 +382,17 @@ const FeaturedProfessionals = ({ categoryFilter = 'all' }) => {
                           </svg>
                           View Full Profile
                         </button>
-                        <button className={`${isDark ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-white hover:bg-gray-50 text-gray-700 border-2 border-gray-200'} font-semibold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center`}>
-                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button 
+                          onClick={() => handleSaveProfessional(professional.id)}
+                          className={`${savedProfessionals.includes(professional.id) 
+                            ? 'bg-red-500 hover:bg-red-600 text-white' 
+                            : isDark ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-white hover:bg-gray-50 text-gray-700 border-2 border-gray-200'
+                          } font-semibold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center`}
+                        >
+                          <svg className="w-5 h-5 mr-2" fill={savedProfessionals.includes(professional.id) ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                           </svg>
-                          Save
+                          {savedProfessionals.includes(professional.id) ? 'Saved' : 'Save'}
                         </button>
                       </div>
                     </div>
@@ -546,23 +563,35 @@ const FeaturedProfessionals = ({ categoryFilter = 'all' }) => {
 
                       {/* Contact Actions */}
                       <div className="space-y-3">
-                        <button className={`w-full ${isDark ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-blue-600 hover:bg-blue-700'} text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center`}>
+                        <a 
+                          href={`mailto:${selectedProfessional.name.toLowerCase().replace(' ', '.')}@eventconnect.ke?subject=Event Inquiry - ${selectedProfessional.role}&body=Hi ${selectedProfessional.name},%0D%0A%0D%0AI'm interested in your ${selectedProfessional.role.toLowerCase()} services for my upcoming event.%0D%0A%0D%0APlease let me know your availability and we can discuss the details.%0D%0A%0D%0AThank you!`}
+                          className={`w-full ${isDark ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-blue-600 hover:bg-blue-700'} text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center`}
+                        >
                           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                           </svg>
                           Send Message
-                        </button>
-                        <button className={`w-full ${isDark ? 'bg-gray-600 hover:bg-gray-500 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'} font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center`}>
+                        </a>
+                        <a 
+                          href={`tel:+254${Math.floor(Math.random() * 900000000) + 700000000}`}
+                          className={`w-full ${isDark ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-green-600 hover:bg-green-700 text-white'} font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center`}
+                        >
                           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                           </svg>
                           Call Now
-                        </button>
-                        <button className={`w-full ${isDark ? 'border-2 border-yellow-500 text-yellow-400 hover:bg-yellow-500 hover:text-black' : 'border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white'} font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center`}>
-                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        </a>
+                        <button 
+                          onClick={() => handleSaveProfessional(selectedProfessional.id)}
+                          className={`w-full ${savedProfessionals.includes(selectedProfessional.id) 
+                            ? 'bg-red-500 hover:bg-red-600 text-white' 
+                            : isDark ? 'border-2 border-yellow-500 text-yellow-400 hover:bg-yellow-500 hover:text-black' : 'border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white'
+                          } font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center`}
+                        >
+                          <svg className="w-5 h-5 mr-2" fill={savedProfessionals.includes(selectedProfessional.id) ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                           </svg>
-                          Save to Favorites
+                          {savedProfessionals.includes(selectedProfessional.id) ? 'Saved to Favorites' : 'Save to Favorites'}
                         </button>
                       </div>
                     </div>

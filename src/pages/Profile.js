@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
 const Profile = () => {
-  const { user, updateProfile } = useAuth();
+  const { user, token, updateProfile } = useAuth(); // Add token for auth
   const { isDark } = useTheme();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -16,27 +16,92 @@ const Profile = () => {
     services: user?.services || [],
     portfolio: user?.portfolio || []
   });
+  const [portfolioFiles, setPortfolioFiles] = useState({}); // Track files for each portfolio item
 
-  const handleSave = () => {
-    updateProfile(formData);
-    setIsEditing(false);
+  const handleSave = async () => {
+    if (!token) {
+      alert('Please log in to save profile.');
+      return;
+    }
+
+    const formDataToSend = new FormData();
+    formDataToSend.append('category', user?.userType === 'professional' ? 'professional' : ''); // Or from form if added
+    formDataToSend.append('specialty', formData.services?.[0] || '');
+    formDataToSend.append('location', formData.location);
+    formDataToSend.append('phone', formData.phone);
+    formDataToSend.append('bio', formData.bio);
+    formDataToSend.append('pricing', ''); // Add if needed
+    formDataToSend.append('setupComplete', 'true');
+
+    // Handle portfolio sync
+    const numPortfolios = formData.portfolio.length;
+    for (let i = 0; i < numPortfolios; i++) {
+      const item = formData.portfolio[i];
+      formDataToSend.append(`portfolio_title[${i}]`, item.title || '');
+      formDataToSend.append(`portfolio_description[${i}]`, item.description || '');
+      
+      // If new file for this item
+      const file = portfolioFiles[item.id];
+      if (file) {
+        formDataToSend.append('portfolio_images', file);
+      } else if (item.image_url) {
+        // Keep existing image
+        formDataToSend.append(`portfolio_existing_image[${i}]`, item.image_path || item.image_url.split('/').pop());
+      }
+    }
+
+    try {
+      const response = await fetch('/api/professional-profile', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formDataToSend
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        // Update local state with backend data
+        setFormData(prev => ({
+          ...prev,
+          portfolio: result.profile.portfolios || []
+        }));
+        updateProfile({ ...formData, portfolio: result.profile.portfolios });
+        setPortfolioFiles({}); // Clear files
+        setIsEditing(false);
+      } else {
+        alert('Failed to save profile. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      alert('Error saving profile.');
+    }
   };
 
   const addPortfolioItem = () => {
+    const newId = Date.now();
     const newItem = {
-      id: Date.now(),
+      id: newId,
       title: '',
       description: '',
       image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=300&fit=crop',
-      category: ''
+      image_url: '',
+      image_path: ''
     };
     setFormData({
       ...formData,
       portfolio: [...formData.portfolio, newItem]
     });
+    // Initialize empty file for new item
+    setPortfolioFiles(prev => ({ ...prev, [newId]: null }));
   };
 
   const updatePortfolioItem = (id, field, value) => {
+    if (field === 'imageFile') {
+      // Handle file selection
+      setPortfolioFiles(prev => ({ ...prev, [id]: value }));
+      return;
+    }
     setFormData({
       ...formData,
       portfolio: formData.portfolio.map(item =>
@@ -45,10 +110,19 @@ const Profile = () => {
     });
   };
 
+  const updatePortfolioFile = (id, file) => {
+    setPortfolioFiles(prev => ({ ...prev, [id]: file }));
+  };
+
   const removePortfolioItem = (id) => {
     setFormData({
       ...formData,
       portfolio: formData.portfolio.filter(item => item.id !== id)
+    });
+    setPortfolioFiles(prev => {
+      const newFiles = { ...prev };
+      delete newFiles[id];
+      return newFiles;
     });
   };
 
@@ -388,7 +462,7 @@ const Profile = () => {
                     <div key={item.id} className="group bg-white border-2 border-gray-100 rounded-2xl p-6 hover:border-blue-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
                       <div className="relative overflow-hidden rounded-xl mb-4">
                         <img
-                          src={item.image}
+                          src={item.image_url || item.image}
                           alt={item.title}
                           className="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-110"
                         />
@@ -415,6 +489,26 @@ const Profile = () => {
                             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
                             rows={4}
                           />
+                          <div className="border-2 border-dashed border-gray-300 rounded-xl p-4 text-center">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => updatePortfolioFile(item.id, e.target.files[0])}
+                              className="hidden"
+                              id={`file-${item.id}`}
+                            />
+                            <label htmlFor={`file-${item.id}`} className="cursor-pointer flex flex-col items-center">
+                              <svg className="w-12 h-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                              </svg>
+                              <span className="text-sm font-medium text-gray-600">
+                                {portfolioFiles[item.id] ? portfolioFiles[item.id].name : 'Click to upload project image (JPG, PNG up to 5MB)'}
+                              </span>
+                            </label>
+                            {portfolioFiles[item.id] && (
+                              <p className="text-xs text-green-600 mt-1">Selected: {portfolioFiles[item.id].name}</p>
+                            )}
+                          </div>
                           <button
                             onClick={() => removePortfolioItem(item.id)}
                             className="text-red-600 hover:text-red-800 text-sm font-semibold flex items-center transition-colors duration-200"

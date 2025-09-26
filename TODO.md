@@ -6,4 +6,5 @@
 - [x] Update get_professionals API to return profile_image for each professional
 - [x] Add profile photo upload field to ProfessionalSetup.js form
 - [x] Update Browse.js to fetch professionals from API instead of using hardcoded data
+- [x] Add portfolio image display with +more indicator for multiple images
 - [x] Test the photo upload and display functionality

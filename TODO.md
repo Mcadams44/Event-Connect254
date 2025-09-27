@@ -53,7 +53,7 @@ Status: [ ] Not started
 - Commit: `git add . && git commit -m "Resolve merge conflicts: integrate portfolio upload"`.
 - Push: `git push origin nathan-functionalities` (updates PR automatically).
 
-Status: [ ] Not started
+Status: [x] Completed
 
 ### Step 5: Final Verification and PR Update
 - Check GitHub PR: Conflicts should be gone; review changes.
@@ -61,7 +61,7 @@ Status: [ ] Not started
 - Test PR branch on GitHub (if CI/CD) or locally.
 - Mark PR ready for review.
 
-Status: [ ] Not started
+Status: [x] Completed
 
 ## Notes
 - Backend (/api/professional-profile) already handles uploads; no changes needed.

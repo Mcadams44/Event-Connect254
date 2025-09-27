@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
 const Profile = () => {
-  const { user, updateProfile } = useAuth();
+  const { user, token, updateProfile } = useAuth(); // Add token for auth
   const { isDark } = useTheme();
   const [isEditing, setIsEditing] = useState(false);
   const [profileImage, setProfileImage] = useState(user?.profileImage || null);
@@ -17,10 +17,66 @@ const Profile = () => {
     services: user?.services || [],
     portfolio: user?.portfolio || []
   });
+  const [portfolioFiles, setPortfolioFiles] = useState({}); // Track files for each portfolio item
 
-  const handleSave = () => {
-    updateProfile({...formData, profileImage});
-    setIsEditing(false);
+  const handleSave = async () => {
+    if (!token) {
+      alert('Please log in to save profile.');
+      return;
+    }
+
+    const formDataToSend = new FormData();
+    formDataToSend.append('category', user?.userType === 'professional' ? 'professional' : ''); // Or from form if added
+    formDataToSend.append('specialty', formData.services?.[0] || '');
+    formDataToSend.append('location', formData.location);
+    formDataToSend.append('phone', formData.phone);
+    formDataToSend.append('bio', formData.bio);
+    formDataToSend.append('pricing', ''); // Add if needed
+    formDataToSend.append('setupComplete', 'true');
+
+    // Handle portfolio sync
+    const numPortfolios = formData.portfolio.length;
+    for (let i = 0; i < numPortfolios; i++) {
+      const item = formData.portfolio[i];
+      formDataToSend.append(`portfolio_title[${i}]`, item.title || '');
+      formDataToSend.append(`portfolio_description[${i}]`, item.description || '');
+
+      // If new file for this item
+      const file = portfolioFiles[item.id];
+      if (file) {
+        formDataToSend.append('portfolio_images', file);
+      } else if (item.image_url) {
+        // Keep existing image
+        formDataToSend.append(`portfolio_existing_image[${i}]`, item.image_path || item.image_url.split('/').pop());
+      }
+    }
+
+    try {
+      const response = await fetch('/api/professional-profile', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formDataToSend
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        // Update local state with backend data
+        setFormData(prev => ({
+          ...prev,
+          portfolio: result.profile.portfolios || []
+        }));
+        updateProfile({ ...formData, portfolio: result.profile.portfolios });
+        setPortfolioFiles({}); // Clear files
+        setIsEditing(false);
+      } else {
+        alert('Failed to save profile. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      alert('Error saving profile.');
+    }
   };
 
   const handleImageUpload = (event) => {
@@ -35,20 +91,29 @@ const Profile = () => {
   };
 
   const addPortfolioItem = () => {
+    const newId = Date.now();
     const newItem = {
-      id: Date.now(),
+      id: newId,
       title: '',
       description: '',
       image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=300&fit=crop',
-      category: ''
+      image_url: '',
+      image_path: ''
     };
     setFormData({
       ...formData,
       portfolio: [...formData.portfolio, newItem]
     });
+    // Initialize empty file for new item
+    setPortfolioFiles(prev => ({ ...prev, [newId]: null }));
   };
 
   const updatePortfolioItem = (id, field, value) => {
+    if (field === 'imageFile') {
+      // Handle file selection
+      setPortfolioFiles(prev => ({ ...prev, [id]: value }));
+      return;
+    }
     setFormData({
       ...formData,
       portfolio: formData.portfolio.map(item =>
@@ -57,10 +122,19 @@ const Profile = () => {
     });
   };
 
+  const updatePortfolioFile = (id, file) => {
+    setPortfolioFiles(prev => ({ ...prev, [id]: file }));
+  };
+
   const removePortfolioItem = (id) => {
     setFormData({
       ...formData,
       portfolio: formData.portfolio.filter(item => item.id !== id)
+    });
+    setPortfolioFiles(prev => {
+      const newFiles = { ...prev };
+      delete newFiles[id];
+      return newFiles;
     });
   };
 
@@ -383,138 +457,3 @@ const Profile = () => {
                   </svg>
                   A compelling bio increases your profile views by up to 60%
                 </div>
-              </div>
-            </div>
-
-            {/* Enhanced Portfolio Section */}
-            {user?.userType === 'professional' && (
-              <div className="mb-10">
-                <div className="flex justify-between items-center mb-6">
-                  <div className="flex items-center">
-                    <svg className="w-6 h-6 mr-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                    </svg>
-                    <h2 className="text-2xl font-bold text-gray-900">Portfolio Showcase</h2>
-                  </div>
-                  {isEditing && (
-                    <button
-                      onClick={addPortfolioItem}
-                      className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-semibold transform hover:scale-105 flex items-center"
-                    >
-                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                      </svg>
-                      Add Project
-                    </button>
-                  )}
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {formData.portfolio.map((item) => (
-                    <div key={item.id} className="group bg-white border-2 border-gray-100 rounded-2xl p-6 hover:border-blue-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                      <div className="relative overflow-hidden rounded-xl mb-4">
-                        <img
-                          src={item.image}
-                          alt={item.title}
-                          className="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-110"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <div className="absolute bottom-4 left-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <div className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-semibold">
-                            ✨ Featured Work
-                          </div>
-                        </div>
-                      </div>
-                      {isEditing ? (
-                        <div className="space-y-4">
-                          <input
-                            type="text"
-                            value={item.title}
-                            onChange={(e) => updatePortfolioItem(item.id, 'title', e.target.value)}
-                            placeholder="Project title"
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          />
-                          <textarea
-                            value={item.description}
-                            onChange={(e) => updatePortfolioItem(item.id, 'description', e.target.value)}
-                            placeholder="Describe this project, your role, and the results achieved..."
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-                            rows={4}
-                          />
-                          <button
-                            onClick={() => removePortfolioItem(item.id)}
-                            className="text-red-600 hover:text-red-800 text-sm font-semibold flex items-center transition-colors duration-200"
-                          >
-                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                            Remove Project
-                          </button>
-                        </div>
-                      ) : (
-                        <div>
-                          <h3 className="font-bold text-gray-900 text-lg mb-2">{item.title || 'Untitled Project'}</h3>
-                          <p className="text-gray-600 leading-relaxed">{item.description || 'No description available'}</p>
-                          <div className="mt-3 flex items-center text-sm text-blue-600">
-                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                            View Details
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-                {formData.portfolio.length === 0 && (
-                  <div className="col-span-full text-center py-16">
-                    <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-12 border-2 border-dashed border-gray-200">
-                      <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                      </svg>
-                      <h3 className="text-xl font-semibold text-gray-700 mb-2">Build Your Portfolio</h3>
-                      <p className="text-gray-500 mb-6">Showcase your best work to attract more clients. Add your first project to get started!</p>
-                      {isEditing && (
-                        <button
-                          onClick={addPortfolioItem}
-                          className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-semibold"
-                        >
-                          Add Your First Project
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Enhanced Save Button */}
-            {isEditing && (
-              <div className={`flex justify-end gap-4 pt-8 border-t ${isDark ? 'border-gray-600' : 'border-gray-200'}`}>
-                <button
-                  onClick={() => setIsEditing(false)}
-                  className={`${isDark ? 'bg-gray-700 hover:bg-gray-600 text-gray-300' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'} px-8 py-3 rounded-xl font-semibold transition-all duration-300`}
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSave}
-                  className={`${isDark ? 'bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700' : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'} text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 flex items-center`}
-                >
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Save Changes
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default Profile;

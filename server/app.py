@@ -281,9 +281,12 @@ def professional_profile():
 
     profile = ProfessionalProfile.query.filter_by(user_id=user_id).first()
 
-    if request.method == 'PUT' and profile:
-        # Delete old portfolios on update
+    # Always delete old portfolios on update/create to sync with frontend
+    if profile:
         Portfolio.query.filter_by(professional_profile_id=profile.id).delete()
+    else:
+        # For new profile, no old to delete
+        pass
 
     # Handle text fields - prefer form data for multipart, fallback to json
     if request.form:
@@ -339,36 +342,65 @@ def professional_profile():
             filepath = os.path.join(UPLOAD_FOLDER, unique_filename)
             file.save(filepath)
             profile.profile_image = f'/static/uploads/{unique_filename}'
+            db.session.commit()
 
-    # Handle portfolio uploads (only if files present)
-    if 'portfolio_images' in request.files:
-        files = request.files.getlist('portfolio_images')
-        titles = request.form.getlist('portfolio_title')
-        descriptions = request.form.getlist('portfolio_description')
+    # Handle portfolio sync: delete old, add new/keep existing
+    titles = request.form.getlist('portfolio_title')
+    descriptions = request.form.getlist('portfolio_description')
+    num_portfolios = len(titles)  # Frontend sends all, even without new file
 
-        # Limit to 4
-        num_portfolios = min(4, len(files))
+    files = request.files.getlist('portfolio_images') if 'portfolio_images' in request.files else []
 
-        for i in range(num_portfolios):
-            file = files[i]
-            if file and file.filename and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-                unique_filename = f"{timestamp}_{filename}"
-                filepath = os.path.join(UPLOAD_FOLDER, unique_filename)
-                file.save(filepath)
+    for i in range(num_portfolios):
+        title = titles[i] if i < len(titles) else ''
+        description = descriptions[i] if i < len(descriptions) else ''
 
-                portfolio = Portfolio(
-                    professional_profile_id=profile.id,
-                    title=titles[i] if i < len(titles) else '',
-                    description=descriptions[i] if i < len(descriptions) else '',
-                    image_path=unique_filename
-                )
-                db.session.add(portfolio)
+        # Check if new file for this index
+        new_file_path = None
+        if i < len(files) and files[i] and files[i].filename and allowed_file(files[i].filename):
+            filename = secure_filename(files[i].filename)
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            unique_filename = f"{timestamp}_{filename}"
+            filepath = os.path.join(UPLOAD_FOLDER, unique_filename)
+            files[i].save(filepath)
+            new_file_path = unique_filename
 
-        db.session.commit()
+        # Use new file or existing path
+        image_path = new_file_path or request.form.get(f'portfolio_existing_image[{i}]', '')
 
-    return jsonify({'message': 'Profile updated successfully'}), 200
+        if image_path:  # Only add if there's an image (new or existing)
+            portfolio = Portfolio(
+                professional_profile_id=profile.id,
+                title=title,
+                description=description,
+                image_path=image_path
+            )
+            db.session.add(portfolio)
+
+    db.session.commit()
+
+    # Return updated profile data
+    profile_data = {
+        'id': profile.id,
+        'category': profile.category,
+        'specialty': profile.specialty,
+        'location': profile.location,
+        'phone': profile.phone,
+        'bio': profile.bio,
+        'pricing': profile.pricing,
+        'setup_complete': profile.setup_complete,
+        'profile_image': profile.profile_image,
+        'portfolios': [
+            {
+                'id': p.id,
+                'title': p.title,
+                'description': p.description,
+                'image_url': f'/static/uploads/{p.image_path}'
+            } for p in profile.portfolios
+        ]
+    }
+
+    return jsonify({'message': 'Profile updated successfully', 'profile': profile_data}), 200
 
 @app.route('/api/bookings', methods=['GET', 'POST'])
 @jwt_required()

@@ -3,9 +3,19 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
+import os
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
+UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///eventconnect.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = 'your-secret-key-change-in-production'
@@ -37,7 +47,18 @@ class ProfessionalProfile(db.Model):
     phone = db.Column(db.String(20))
     bio = db.Column(db.Text)
     pricing = db.Column(db.String(100))
+    profile_image = db.Column(db.String(255), default='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face')
     setup_complete = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    portfolios = db.relationship('Portfolio', backref='professional_profile', lazy=True, cascade='all, delete-orphan')
+
+class Portfolio(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    professional_profile_id = db.Column(db.Integer, db.ForeignKey('professional_profile.id'), nullable=False)
+    title = db.Column(db.String(100))
+    description = db.Column(db.Text)
+    image_path = db.Column(db.String(200), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Service(db.Model):
@@ -190,6 +211,15 @@ def get_professionals():
         else:
             # Only show professionals who have completed their setup
             if profile and profile.setup_complete:
+                portfolio_items = []
+                if hasattr(profile, 'portfolios'):
+                    for p in profile.portfolios:
+                        portfolio_items.append({
+                            'id': p.id,
+                            'title': p.title,
+                            'description': p.description,
+                            'image_url': f'/static/uploads/{p.image_path}'
+                        })
                 result.append({
                     'id': user.id,
                     'name': user.name,
@@ -203,8 +233,8 @@ def get_professionals():
                     'rating': 4.5,
                     'reviews': 25,
                     'verified': True,
-                    'portfolio': [],
-                    'image': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face'
+                    'portfolio': portfolio_items,
+                    'image': profile.profile_image or 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face'
                 })
     # Add sample professionals for all categories
     if len([r for r in result if r.get('verified')]) < 5:
@@ -241,43 +271,93 @@ def get_professionals():
 def professional_profile():
     # Try to get user from JWT, fallback to request data
     try:
-        from flask_jwt_extended import verify_jwt_in_request
-        verify_jwt_in_request()
         user_id = get_jwt_identity()
     except:
         # Fallback for testing - use user_id from request or default
-        data = request.get_json()
+        if request.is_json:
+            data = request.get_json()
+        else:
+            data = request.form
         user_id = data.get('user_id', 1)  # Default to user 1 for testing
-        
-    if not data:
-        data = request.get_json()
-    
+
     profile = ProfessionalProfile.query.filter_by(user_id=user_id).first()
-    
-    if profile:
-        # Update existing profile
-        profile.category = data.get('category', profile.category)
-        profile.specialty = data.get('specialty', profile.specialty)
-        profile.location = data.get('location', profile.location)
-        profile.phone = data.get('phone', profile.phone)
-        profile.bio = data.get('bio', profile.bio)
-        profile.pricing = data.get('pricing', profile.pricing)
-        profile.setup_complete = data.get('setupComplete', profile.setup_complete)
+
+    if request.method == 'PUT' and profile:
+        # Delete old portfolios on update
+        Portfolio.query.filter_by(professional_profile_id=profile.id).delete()
+
+    # Handle text fields - prefer form data for multipart, fallback to json
+    if request.form:
+        category = request.form.get('category', '')
+        specialty = request.form.get('specialty')
+        location = request.form.get('location', '')
+        phone = request.form.get('phone')
+        bio = request.form.get('bio', '')
+        pricing = request.form.get('pricing')
+        setup_complete = request.form.get('setupComplete', 'false').lower() == 'true'
     else:
+        json_data = request.get_json() or {}
+        category = json_data.get('category', '')
+        specialty = json_data.get('specialty')
+        location = json_data.get('location', '')
+        phone = json_data.get('phone')
+        bio = json_data.get('bio', '')
+        pricing = json_data.get('pricing')
+        setup_complete = json_data.get('setupComplete', False)
+
+    if not profile:
         # Create new profile
         profile = ProfessionalProfile(
             user_id=user_id,
-            category=data['category'],
-            specialty=data.get('specialty'),
-            location=data['location'],
-            phone=data.get('phone'),
-            bio=data['bio'],
-            pricing=data.get('pricing'),
-            setup_complete=data.get('setupComplete', False)
+            category=category,
+            specialty=specialty,
+            location=location,
+            phone=phone,
+            bio=bio,
+            pricing=pricing,
+            setup_complete=setup_complete
         )
         db.session.add(profile)
-    
+    else:
+        # Update existing profile
+        profile.category = category or profile.category
+        profile.specialty = specialty or profile.specialty
+        profile.location = location or profile.location
+        profile.phone = phone or profile.phone
+        profile.bio = bio or profile.bio
+        profile.pricing = pricing or profile.pricing
+        profile.setup_complete = setup_complete
+
     db.session.commit()
+    
+    # Handle portfolio uploads (only if files present)
+    if 'portfolio_images' in request.files:
+        files = request.files.getlist('portfolio_images')
+        titles = request.form.getlist('portfolio_title')
+        descriptions = request.form.getlist('portfolio_description')
+        
+        # Limit to 4
+        num_portfolios = min(4, len(files))
+
+        for i in range(num_portfolios):
+            file = files[i]
+            if file and file.filename and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                unique_filename = f"{timestamp}_{filename}"
+                filepath = os.path.join(UPLOAD_FOLDER, unique_filename)
+                file.save(filepath)
+                
+                portfolio = Portfolio(
+                    professional_profile_id=profile.id,
+                    title=titles[i] if i < len(titles) else '',
+                    description=descriptions[i] if i < len(descriptions) else '',
+                    image_path=unique_filename
+                )
+                db.session.add(portfolio)
+        
+        db.session.commit()
+    
     return jsonify({'message': 'Profile updated successfully'}), 200
 
 @app.route('/api/bookings', methods=['GET', 'POST'])
@@ -303,6 +383,7 @@ def bookings():
         return jsonify({'message': 'Booking created', 'id': booking.id}), 201
 
 if __name__ == '__main__':
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     with app.app_context():
         db.create_all()
     app.run(debug=True)

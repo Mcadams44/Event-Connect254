@@ -3,13 +3,24 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
+import os
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
+UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///eventconnect.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = 'your-secret-key-change-in-production'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
@@ -23,7 +34,7 @@ class User(db.Model):
     name = db.Column(db.String(100), nullable=False)
     user_type = db.Column(db.String(20), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
+
     bookings = db.relationship('Booking', backref='client', lazy=True, foreign_keys='Booking.client_id')
     services = db.relationship('Service', backref='professional', lazy=True)
     professional_profile = db.relationship('ProfessionalProfile', backref='user', uselist=False)
@@ -37,7 +48,18 @@ class ProfessionalProfile(db.Model):
     phone = db.Column(db.String(20))
     bio = db.Column(db.Text)
     pricing = db.Column(db.String(100))
+    profile_image = db.Column(db.String(255), default='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face')
     setup_complete = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    portfolios = db.relationship('Portfolio', backref='professional_profile', lazy=True, cascade='all, delete-orphan')
+
+class Portfolio(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    professional_profile_id = db.Column(db.Integer, db.ForeignKey('professional_profile.id'), nullable=False)
+    title = db.Column(db.String(100))
+    description = db.Column(db.Text)
+    image_path = db.Column(db.String(200), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Service(db.Model):
@@ -58,27 +80,27 @@ class Booking(db.Model):
     rating = db.Column(db.Integer)
     review = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
+
     service = db.relationship('Service', backref='bookings')
 
 # Routes
 @app.route('/api/register', methods=['POST'])
 def register():
     data = request.get_json()
-    
+
     if User.query.filter_by(email=data['email']).first():
         return jsonify({'message': 'Email already exists'}), 400
-    
+
     user = User(
         email=data['email'],
         password_hash=generate_password_hash(data['password']),
         name=data['name'],
         user_type=data['user_type']
     )
-    
+
     db.session.add(user)
     db.session.commit()
-    
+
     access_token = create_access_token(identity=user.id)
     return jsonify({'access_token': access_token, 'user': {'id': user.id, 'name': user.name, 'email': user.email}}), 201
 
@@ -86,11 +108,11 @@ def register():
 def login():
     data = request.get_json()
     user = User.query.filter_by(email=data['email']).first()
-    
+
     if user and check_password_hash(user.password_hash, data['password']):
         access_token = create_access_token(identity=user.id)
         return jsonify({'access_token': access_token, 'user': {'id': user.id, 'name': user.name, 'email': user.email}}), 200
-    
+
     return jsonify({'message': 'Invalid credentials'}), 401
 
 @app.route('/api/services', methods=['GET', 'POST'])
@@ -102,7 +124,7 @@ def services():
             'id': s.id, 'name': s.name, 'description': s.description,
             'price': s.price, 'category': s.category, 'professional_id': s.professional_id
         } for s in services])
-    
+
     elif request.method == 'POST':
         data = request.get_json()
         service = Service(
@@ -128,20 +150,20 @@ def get_categories():
         {'id': 'decorator', 'name': 'Decorator'},
         {'id': 'venue coordinator', 'name': 'Venue Coordinator'}
     ]
-    
+
     return jsonify(categories)
 
 @app.route('/api/services/<int:service_id>', methods=['GET', 'PATCH', 'DELETE'])
 @jwt_required()
 def service_detail(service_id):
     service = Service.query.get_or_404(service_id)
-    
+
     if request.method == 'GET':
         return jsonify({
             'id': service.id, 'name': service.name, 'description': service.description,
             'price': service.price, 'category': service.category
         })
-    
+
     elif request.method == 'PATCH':
         data = request.get_json()
         service.name = data.get('name', service.name)
@@ -150,7 +172,7 @@ def service_detail(service_id):
         service.category = data.get('category', service.category)
         db.session.commit()
         return jsonify({'message': 'Service updated'})
-    
+
     elif request.method == 'DELETE':
         db.session.delete(service)
         db.session.commit()
@@ -161,7 +183,7 @@ def get_professionals():
     professionals = db.session.query(User, ProfessionalProfile).join(
         ProfessionalProfile, User.id == ProfessionalProfile.user_id, isouter=True
     ).filter(User.user_type == 'professional').all()
-    
+
     result = []
     for user, profile in professionals:
         # Add sample data for existing users without profiles
@@ -190,6 +212,15 @@ def get_professionals():
         else:
             # Only show professionals who have completed their setup
             if profile and profile.setup_complete:
+                portfolio_items = []
+                if hasattr(profile, 'portfolios'):
+                    for p in profile.portfolios:
+                        portfolio_items.append({
+                            'id': p.id,
+                            'title': p.title,
+                            'description': p.description,
+                            'image_url': f'/static/uploads/{p.image_path}'
+                        })
                 result.append({
                     'id': user.id,
                     'name': user.name,
@@ -203,8 +234,8 @@ def get_professionals():
                     'rating': 4.5,
                     'reviews': 25,
                     'verified': True,
-                    'portfolio': [],
-                    'image': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face'
+                    'portfolio': portfolio_items,
+                    'image': profile.profile_image or 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face'
                 })
     # Add sample professionals for all categories
     if len([r for r in result if r.get('verified')]) < 5:
@@ -216,7 +247,7 @@ def get_professionals():
             {'id': 105, 'name': 'Emma Wilson', 'email': 'emma@example.com', 'category': 'decorator', 'specialty': 'Event Styling', 'location': 'Denver, CO', 'phone': '+1-555-0345', 'pricing': '$500/event', 'bio': 'Creative event decoration and styling'},
             {'id': 106, 'name': 'Carlos Martinez', 'email': 'carlos@example.com', 'category': 'venue coordinator', 'specialty': 'Venue Management', 'location': 'Phoenix, AZ', 'phone': '+1-555-0678', 'pricing': '$150/hour', 'bio': 'Venue management and coordination specialist'}
         ]
-        
+
         for prof in sample_professionals:
             result.append({
                 'id': prof['id'],
@@ -234,51 +265,141 @@ def get_professionals():
                 'portfolio': [],
                 'image': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face'
             })
-    
+
     return jsonify(result)
 
 @app.route('/api/professional-profile', methods=['POST', 'PUT'])
 def professional_profile():
     # Try to get user from JWT, fallback to request data
     try:
-        from flask_jwt_extended import verify_jwt_in_request
-        verify_jwt_in_request()
         user_id = get_jwt_identity()
     except:
         # Fallback for testing - use user_id from request or default
-        data = request.get_json()
+        if request.is_json:
+            data = request.get_json()
+        else:
+            data = request.form
         user_id = data.get('user_id', 1)  # Default to user 1 for testing
-        
-    if not data:
-        data = request.get_json()
-    
+
     profile = ProfessionalProfile.query.filter_by(user_id=user_id).first()
-    
-    if profile:
-        # Update existing profile
-        profile.category = data.get('category', profile.category)
-        profile.specialty = data.get('specialty', profile.specialty)
-        profile.location = data.get('location', profile.location)
-        profile.phone = data.get('phone', profile.phone)
-        profile.bio = data.get('bio', profile.bio)
-        profile.pricing = data.get('pricing', profile.pricing)
-        profile.setup_complete = data.get('setupComplete', profile.setup_complete)
+
+    if request.method == 'PUT' and profile:
+        # Delete old portfolios on update
+        Portfolio.query.filter_by(professional_profile_id=profile.id).delete()
+
+    # Handle text fields - prefer form data for multipart, fallback to json
+    if request.form:
+        category = request.form.get('category', '')
+        specialty = request.form.get('specialty')
+        location = request.form.get('location', '')
+        phone = request.form.get('phone')
+        bio = request.form.get('bio', '')
+        pricing = request.form.get('pricing')
+        setup_complete = request.form.get('setupComplete', 'false').lower() == 'true'
     else:
+        json_data = request.get_json() or {}
+        category = json_data.get('category', '')
+        specialty = json_data.get('specialty')
+        location = json_data.get('location', '')
+        phone = json_data.get('phone')
+        bio = json_data.get('bio', '')
+        pricing = json_data.get('pricing')
+        setup_complete = json_data.get('setupComplete', False)
+
+    if not profile:
         # Create new profile
         profile = ProfessionalProfile(
             user_id=user_id,
-            category=data['category'],
-            specialty=data.get('specialty'),
-            location=data['location'],
-            phone=data.get('phone'),
-            bio=data['bio'],
-            pricing=data.get('pricing'),
-            setup_complete=data.get('setupComplete', False)
+            category=category,
+            specialty=specialty,
+            location=location,
+            phone=phone,
+            bio=bio,
+            pricing=pricing,
+            setup_complete=setup_complete
         )
         db.session.add(profile)
-    
+    else:
+        # Update existing profile
+        profile.category = category or profile.category
+        profile.specialty = specialty or profile.specialty
+        profile.location = location or profile.location
+        profile.phone = phone or profile.phone
+        profile.bio = bio or profile.bio
+        profile.pricing = pricing or profile.pricing
+        profile.setup_complete = setup_complete
+
     db.session.commit()
-    return jsonify({'message': 'Profile updated successfully'}), 200
+
+    # Handle profile photo upload
+    if 'profilePhoto' in request.files:
+        file = request.files['profilePhoto']
+        if file and file.filename and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            unique_filename = f"{timestamp}_{filename}"
+            filepath = os.path.join(UPLOAD_FOLDER, unique_filename)
+            file.save(filepath)
+            profile.profile_image = f'/static/uploads/{unique_filename}'
+            db.session.commit()
+
+    # Handle portfolio sync: delete old, add new/keep existing
+    titles = request.form.getlist('portfolio_title')
+    descriptions = request.form.getlist('portfolio_description')
+    num_portfolios = len(titles)  # Frontend sends all, even without new file
+
+    files = request.files.getlist('portfolio_images') if 'portfolio_images' in request.files else []
+
+    for i in range(num_portfolios):
+        title = titles[i] if i < len(titles) else ''
+        description = descriptions[i] if i < len(descriptions) else ''
+
+        # Check if new file for this index
+        new_file_path = None
+        if i < len(files) and files[i] and files[i].filename and allowed_file(files[i].filename):
+            filename = secure_filename(files[i].filename)
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            unique_filename = f"{timestamp}_{filename}"
+            filepath = os.path.join(UPLOAD_FOLDER, unique_filename)
+            files[i].save(filepath)
+            new_file_path = unique_filename
+
+        # Use new file or existing path
+        image_path = new_file_path or request.form.get(f'portfolio_existing_image[{i}]', '')
+
+        if image_path:  # Only add if there's an image (new or existing)
+            portfolio = Portfolio(
+                professional_profile_id=profile.id,
+                title=title,
+                description=description,
+                image_path=image_path
+            )
+            db.session.add(portfolio)
+
+    db.session.commit()
+
+    # Return updated profile data
+    profile_data = {
+        'id': profile.id,
+        'category': profile.category,
+        'specialty': profile.specialty,
+        'location': profile.location,
+        'phone': profile.phone,
+        'bio': profile.bio,
+        'pricing': profile.pricing,
+        'setup_complete': profile.setup_complete,
+        'profile_image': profile.profile_image,
+        'portfolios': [
+            {
+                'id': p.id,
+                'title': p.title,
+                'description': p.description,
+                'image_url': f'/static/uploads/{p.image_path}'
+            } for p in profile.portfolios
+        ]
+    }
+
+    return jsonify({'message': 'Profile updated successfully', 'profile': profile_data}), 200
 
 @app.route('/api/bookings', methods=['GET', 'POST'])
 @jwt_required()
@@ -289,7 +410,7 @@ def bookings():
             'id': b.id, 'service_id': b.service_id, 'event_date': b.event_date.isoformat(),
             'status': b.status, 'rating': b.rating, 'review': b.review
         } for b in bookings])
-    
+
     elif request.method == 'POST':
         data = request.get_json()
         booking = Booking(
@@ -303,6 +424,7 @@ def bookings():
         return jsonify({'message': 'Booking created', 'id': booking.id}), 201
 
 if __name__ == '__main__':
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     with app.app_context():
         db.create_all()
     app.run(debug=True)
